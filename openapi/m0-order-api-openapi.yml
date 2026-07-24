@@ -1,0 +1,532 @@
+openapi: 3.0.1
+info:
+  title: liquidity-api Order API
+  version: ''
+  description: This API provides quotes for moving and converting between M extensions and other stablecoins
+servers:
+- url: https://gateway.m0.xyz/v1/orchestration
+  description: mainnet
+- url: https://gateway.stage.m0.xyz/v1/orchestration
+  description: stage
+- url: https://gateway.dev.m0.xyz/v1/orchestration
+  description: devnet
+- url: http://localhost:5600
+  description: localnet
+tags:
+- name: Order
+paths:
+  /orders/{originChain}/{orderId}/cancel:
+    post:
+      description: "Build a cancel transaction for an existing limit order.\n\nThe returned `TransactionPayload` carries its own `chain` (and\n`chainId` for EVM payloads) indicating where the transaction must\nbe broadcast:\n\n  * **Same-chain orders** (origin == destination): broadcast on the\n    order's chain. The payload's `chain` matches the URL `chain`.\n  * **Cross-chain orders** (origin != destination): the cancel must\n    be initiated on the order's **destination chain**, which then\n    dispatches a CancelReport message back to the origin chain to\n    release the deposited funds. The payload's `chain` is the\n    destination chain and **differs from the URL `chain`**. The\n    payload's `value` includes the bridge fee.\n\nAlways read `payload.chain` (and `payload.chainId` for EVM) to\ndetermine the broadcast target — do not assume it matches the URL\npath parameter.\n\n**`caller`** (optional, SVM only): the base58 pubkey that will sign\nand pay for the resulting Solana transaction. Required when the\ncancel is being initiated by someone other than the original sender\n— for example, a permissionless cancel after the order's\n`fillDeadline`. If omitted, defaults to the original sender, which\nonly allows self-cancels. Ignored for EVM destinations: EVM\nunsigned-tx payloads do not bake in a signer, so any wallet can\nbroadcast the same calldata and the contract recovers `msg.sender`\nfrom the signature at submission.\n\n**Error responses**\n\nAll errors return `commons.ErrorBody` (`{ code, message, requestId }`).\nBranch on `code`, not the HTTP status — multiple errors may share a\nstatus as the API evolves. The `requestId` mirrors the per-request id\nin server logs; include it when filing a support ticket.\n\n| Status | `code`                | When                                                                          |\n| ------ | --------------------- | ----------------------------------------------------------------------------- |\n| 400    | `BadOrderRequest`     | Malformed path params: unknown chain, bad `orderId`, or unsupported `caller`. |\n| 404    | `OrderNotFound`       | No order with this id exists on-chain.                                        |\n| 409    | `OrderNotCancellable` | The order is already in a terminal state (`CANCELLED` / `COMPLETED`).         |\n| 500    | `CancelOrderError`    | Unexpected failure building the cancel transaction; may succeed on retry.     |"
+      operationId: order_cancelOrder
+      tags:
+      - Order
+      parameters:
+      - name: originChain
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Chain'
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionPayload'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '409':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderParams'
+              nullable: true
+  /orders/{originChain}/{orderId}:
+    get:
+      description: 'Get full on-chain state plus indexer enrichment for a single order.
+
+
+        **Error responses**
+
+
+        Errors return `commons.ErrorBody` (`{ code, message, requestId }`);
+
+        branch on `code`, not the HTTP status.
+
+
+        | Status | `code`            | When                                                          |
+
+        | ------ | ----------------- | ------------------------------------------------------------- |
+
+        | 400    | `BadOrderRequest` | Malformed path params: unknown chain or bad `orderId`.        |
+
+        | 404    | `OrderNotFound`   | No order with this id exists on-chain.                        |'
+      operationId: order_getOrder
+      tags:
+      - Order
+      parameters:
+      - name: originChain
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/Chain'
+      - name: orderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+      - ApiKeyAuth: []
+  /orders:
+    get:
+      description: List orders with optional filters
+      operationId: order_getOrders
+      tags:
+      - Order
+      parameters:
+      - name: sender
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/OrderStatus'
+          nullable: true
+      - name: originChainId
+        in: query
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: destChainId
+        in: query
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersResponse'
+      security:
+      - ApiKeyAuth: []
+components:
+  schemas:
+    Fill:
+      title: Fill
+      type: object
+      description: 'A single fill event recorded by the indexer for an order. An order may
+
+        have multiple fills when filled by multiple solvers or in multiple
+
+        transactions; ordered chronologically.'
+      properties:
+        filledAt:
+          type: integer
+        chainId:
+          type: integer
+        transactionHash:
+          type: string
+        solver:
+          type: string
+        amountInToRelease:
+          type: string
+        amountOutFilled:
+          type: string
+      required:
+      - filledAt
+      - chainId
+      - transactionHash
+      - solver
+      - amountInToRelease
+      - amountOutFilled
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    CancelOrderParams:
+      title: CancelOrderParams
+      type: object
+      description: Optional body for the cancel endpoint.
+      properties:
+        caller:
+          type: string
+          nullable: true
+    ErrorBody:
+      title: ErrorBody
+      type: object
+      description: 'Standard error response body. Every error response from this API
+
+        returns this shape.'
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: Stable machine-readable identifier for the failure mode.
+        message:
+          type: string
+          description: Human-readable description of what went wrong. Safe to surface in UI.
+        requestId:
+          type: string
+          nullable: true
+          description: 'Per-request correlation id (matches the `requestId` field in
+
+            server logs). Include this when filing support tickets.'
+      required:
+      - code
+      - message
+    OrderStatus:
+      title: OrderStatus
+      type: string
+      enum:
+      - CREATED
+      - COMPLETED
+      - CANCELLED
+    OrderSummary:
+      title: OrderSummary
+      type: object
+      description: 'Compact order shape returned by the list endpoint. Sourced from the
+
+        indexer-fed DB, so on-chain-only fields (nonce, recipient, version) are
+
+        not included. Use getOrder for the full resource.'
+      properties:
+        orderId:
+          type: string
+        createdAt:
+          type: integer
+        originChainId:
+          type: integer
+        sender:
+          type: string
+        tokenIn:
+          type: string
+        amountIn:
+          type: string
+        destChainId:
+          type: integer
+        tokenOut:
+          type: string
+        amountOut:
+          type: string
+        designatedSolver:
+          type: string
+        openTx:
+          type: string
+        amountOutFilled:
+          type: string
+        fillCount:
+          type: integer
+        amountInReleased:
+          type: string
+        fillReportCount:
+          type: integer
+        amountRefunded:
+          type: string
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        fillDeadline:
+          type: integer
+        funder:
+          type: string
+        resolvedAt:
+          type: integer
+          nullable: true
+      required:
+      - orderId
+      - createdAt
+      - originChainId
+      - sender
+      - tokenIn
+      - amountIn
+      - destChainId
+      - tokenOut
+      - amountOut
+      - designatedSolver
+      - openTx
+      - amountOutFilled
+      - fillCount
+      - amountInReleased
+      - fillReportCount
+      - amountRefunded
+      - status
+      - fillDeadline
+      - funder
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
+    Order:
+      title: Order
+      type: object
+      description: 'Full order state returned by the detail endpoint. On-chain fields are
+
+        authoritative; indexer-only fields (openTx, fillCount, fillReportCount,
+
+        resolvedAt, fills) are optional and may be absent if the indexer has not
+
+        yet caught up or is unavailable.'
+      properties:
+        orderId:
+          type: string
+        version:
+          type: integer
+        nonce:
+          type: string
+        sender:
+          type: string
+        recipient:
+          type: string
+        originChainId:
+          type: integer
+        destChainId:
+          type: integer
+        tokenIn:
+          type: string
+        tokenOut:
+          type: string
+        amountIn:
+          type: string
+        amountOut:
+          type: string
+        designatedSolver:
+          type: string
+        createdAt:
+          type: integer
+        fillDeadline:
+          type: integer
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        amountOutFilled:
+          type: string
+        amountInReleased:
+          type: string
+        amountRefunded:
+          type: string
+        funder:
+          type: string
+        openTx:
+          type: string
+          nullable: true
+        fillCount:
+          type: integer
+          nullable: true
+        fillReportCount:
+          type: integer
+          nullable: true
+        resolvedAt:
+          type: integer
+          nullable: true
+        fills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fill'
+          nullable: true
+      required:
+      - orderId
+      - version
+      - nonce
+      - sender
+      - recipient
+      - originChainId
+      - destChainId
+      - tokenIn
+      - tokenOut
+      - amountIn
+      - amountOut
+      - designatedSolver
+      - createdAt
+      - fillDeadline
+      - status
+      - amountOutFilled
+      - amountInReleased
+      - amountRefunded
+      - funder
+    SvmPayload:
+      title: SvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
+          type: string
+          format: byte
+      required:
+      - chain
+      - transaction
+    EvmPayload:
+      title: EvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
+          type: integer
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
+      required:
+      - chain
+      - chainId
+      - to
+      - data
+      - value
+    OrdersResponse:
+      title: OrdersResponse
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderSummary'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+      required:
+      - orders
+      - total
+      - limit
+      - offset
+    ErrorCode:
+      title: ErrorCode
+      type: string
+      enum:
+      - QuoteError
+      - BadQuoteRequest
+      - NoQuotesAvailable
+      - BadOrderRequest
+      - OrderNotFound
+      - OrderNotCancellable
+      - CancelOrderError
+      - BadTopologyRequest
+      - BadPermitRequest
+      - PermitNotSupported
+      - PermitExpired
+      - InvalidPermitSignature
+      - PermitQuoteError
+      - PermitBuildError
+      description: 'Stable machine-readable identifier for an API error. Each value
+
+        corresponds 1:1 to an error type (and to one `responses` entry
+
+        in the OpenAPI spec). Branch on this rather than on the HTTP status
+
+        code — multiple errors may share a status as the API evolves.'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
