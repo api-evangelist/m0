@@ -1,0 +1,29 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for M0 Orchestration API
+  version: 1.0.0
+extends: openapi/m0-orchestration-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: m0
+    x-apievangelist-humanURL: https://docs.m0.org/api-reference/introduction
+    x-apievangelist-auth: api-key (x-api-key header)
+    x-apievangelist-pagination: offset (limit/offset)
+    x-apievangelist-error-envelope: 'custom ErrorBody: code(enum)/message/requestId'
+- target: $.info
+  update:
+    description: >-
+      M0 Orchestration (liquidity) API — quotes for moving and converting
+      between M0 extensions and other stablecoins, cross-chain order status,
+      and EIP-2612 permit building for gasless, intent-based settlement.
+- target: $.tags
+  update:
+  - name: quote
+    description: Quotes and supported assets.
+  - name: orders
+    description: Cross-chain order lifecycle (list, status, cancel).
+  - name: permit
+    description: EIP-2612 permit quote and build for gasless settlement.
+  - name: topology
+    description: Route topology and route statistics.

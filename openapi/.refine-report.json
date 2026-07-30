@@ -1,0 +1,25 @@
+{
+  "provider": "m0",
+  "sources": [
+    "m0-order-api-openapi.yml",
+    "m0-permit-api-openapi.yml",
+    "m0-quote-api-openapi.yml",
+    "m0-topology-api-openapi.yml"
+  ],
+  "outputs": [
+    "m0-order-api-openapi.yml",
+    "m0-permit-api-openapi.yml",
+    "m0-quote-api-openapi.yml",
+    "m0-topology-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "m0-order-api-openapi.yml: info.version missing",
+    "m0-permit-api-openapi.yml: info.version missing",
+    "m0-quote-api-openapi.yml: info.version missing",
+    "m0-topology-api-openapi.yml: info.version missing"
+  ],
+  "notes": [],
+  "skipped": []
+}

@@ -1,0 +1,86 @@
+# M0 Documentation
+
+> Documentation for the M0 stablecoin protocol and platform.
+
+## Documentation Sets
+
+- [M0 Documentation - Full](https://docs.m0.org//llms-full.txt): Complete documentation for the M0 stablecoin protocol, including guides, protocol specs, and API reference.
+
+## Get Started
+
+- [Architecture overview](https://docs.m0.org/raw/get-started/how-it-works.md): How builders and issuers come together to create programmable stablecoins.
+- [About M0](https://docs.m0.org/raw/get-started/overview.md): M0 is the modular stablecoin infrastructure. For builders who've outgrown one-size-fits-all money.
+- [Platform mechanics](https://docs.m0.org/raw/get-started/protocol-mechanics.md): Understand how value flows through the M0 platform, including collateral, mint ratios, rates, and yield allocation.
+
+## Build
+
+- [Liquidity](https://docs.m0.org/raw/build/accessing-liquidity.md): M0's Onchain Orchestration provides seamless access to liquidity for M0-powered stablecoin across multiple chains.
+- [Integrating with the M0 Portals](https://docs.m0.org/raw/build/bridging-developer.md): Technical details and step-by-step workflows for developers integrating with the M0 stablecoin bridging infrastructure.
+- [Bridging M And wM Tokens](https://docs.m0.org/raw/build/bridging-user.md): How to manually bridge M and wrapped M (wM) tokens between Ethereum and connected networks using a block explorer.
+- [Design templates](https://docs.m0.org/raw/build/choosing-your-model.md): Compare M0's stablecoin extension models to find the right monetization strategy and deployment chain for your use case.
+- [Cross chain](https://docs.m0.org/raw/build/cross-chain.md): With M0 you can build multichain stablecoins across EVM chains and Solana using M0 Portals.
+- [Overview](https://docs.m0.org/raw/build/overview.md): Go from zero to a fully fledged stablecoin on M0 - your brand, your monetization model, your rules.
+- [Design customization](https://docs.m0.org/raw/build/stablecoin-features.md): Key design decisions for building your stablecoin extension on M0, from branding and access control to rewards and compliance.
+- [Implementation guide](https://docs.m0.org/raw/build/svm-noyield-guide.md): Step-by-step guide for deploying the NoYield treasury model stablecoin on Solana and SVM chains.
+- [Overview](https://docs.m0.org/raw/build/svm-noyield-guide-overview.md): Step-by-step guide for deploying the NoYield treasury model stablecoin on Solana and SVM chains.
+- [Implementation guide](https://docs.m0.org/raw/build/treasury-guide.md): Step-by-step instructions for deploying a Treasury Model stablecoin where 100% of rewards are captured by the use case owner.
+- [Implementation guide](https://docs.m0.org/raw/build/treasury-jmi-guide.md): Step-by-step instructions for deploying a JMI (Just Mint It) stablecoin extension with multi-collateral support and centralized rewards distribution.
+- [Overview](https://docs.m0.org/raw/build/treasury-jmi-overview.md): Deep dive into the JMI ("Just Mint It") extension template which accepts multiple collateral types while directing 100% of rewards to a single recipient.
+- [Overview](https://docs.m0.org/raw/build/treasury-model.md): Deep dive into the Treasury Model template where all accrued rewards are captured by the use case owner.
+
+## Issuers
+
+- [Overview](https://docs.m0.org/raw/issuers/overview.md): Qualified financial institutions can integrate with M0's Stablecoin Core to issue stablecoins.
+
+## Protocol
+
+- [Distribution Vault](https://docs.m0.org/raw/protocol/distribution-vault.md): Documentation of the Distribution Vault (TTGVault), the core component for collecting and distributing protocol revenue to Zero token holders.
+- [M0 Extensions](https://docs.m0.org/raw/protocol/extensions.md): Documentation of M0 Extensions, the application layer for building custom stablecoins on the M0 platform, including the SwapFacility for seamless 1:1 conversions.
+- [Limit Order Protocol](https://docs.m0.org/raw/protocol/limit-order-protocol.md): Technical deep dive into M0's onchain settlement layer for trustless, intent-based token exchanges across chains with partial fills, gasless orders, and secure cancellation.
+- [M0 Portals](https://docs.m0.org/raw/protocol/m-portals.md): Documentation of M0's cross-chain architecture, including the M Portal (Wormhole) and M Portal Lite (Hyperlane) implementations for bridging M across blockchains.
+- [M Token](https://docs.m0.org/raw/protocol/m-token.md): Complete technical documentation for the M token, the immutable ERC20-compliant token at the heart of the M0 Ecosystem.
+- [M Token Specification](https://docs.m0.org/raw/protocol/m-token-spec.md): Low-level technical specification for the M token - function signatures, events, errors, and storage layout.
+- [Minting & Burning (MinterGateway)](https://docs.m0.org/raw/protocol/minting-burning.md): Complete documentation of the MinterGateway contract, the central hub for minting and burning, managing minter collateral, and tracking debt obligations.
+- [Portal V2](https://docs.m0.org/raw/protocol/portal-v2.md): Technical deep dive into M0's unified cross-chain bridge and messaging system, featuring modular bridge adapters, token bridging, and protocol metadata propagation.
+- [Rate Models & Yield](https://docs.m0.org/raw/protocol/rate-models.md): Detailed documentation of the interest rate models that govern minter obligations and earner yield within the M0 Protocol.
+- [Roles](https://docs.m0.org/raw/protocol/roles.md): Overview of the primary roles within the M0 ecosystem, their responsibilities, and how they interact with the protocol's core smart contracts.
+- [M0 On Solana](https://docs.m0.org/raw/protocol/solana.md): Technical deep dive into the M0 Protocol's implementation on the Solana blockchain, including program specifications, V2 upgrades, and developer integration guides.
+- [MGUSD on Stellar](https://docs.m0.org/raw/protocol/stellar.md): Technical overview of MGUSD, Stellar Asset Contract (SAC) stablecoin, administered via a Soroban smart contract.
+- [Wrapped M (wM)](https://docs.m0.org/raw/protocol/wrapped-m.md): Complete documentation of Wrapped M (wM), the non-rebasing ERC-20 wrapper that maintains yield-earning capabilities while providing DeFi compatibility.
+- [Wrapped M Specification](https://docs.m0.org/raw/protocol/wrapped-m-spec.md): Low-level technical specification for Wrapped M (wM) - function signatures, events, errors, and storage layout.
+
+## API Reference
+
+- [API Reference](https://docs.m0.org/raw/api-reference/introduction.md): Overview of M0's Orchestration API (REST) and Protocol API (GraphQL).
+- [POST /orders/{originChain}/{orderId}/cancel](https://docs.m0.org/raw/api-reference/orchestration/cancel-order.md): Builds a cancellation transaction for an existing limit order.
+- [GET /orders/{originChain}/{orderId}](https://docs.m0.org/raw/api-reference/orchestration/order-status.md): Returns the full on-chain state plus indexer enrichment for a single order.
+- [GET /orders](https://docs.m0.org/raw/api-reference/orchestration/orders.md): Lists orders with optional filters for sender, status, chain IDs, and pagination.
+- [Orchestration API](https://docs.m0.org/raw/api-reference/orchestration/overview.md): Get quotes for moving and converting between M0 extensions and other stablecoins.
+- [POST /quote](https://docs.m0.org/raw/api-reference/orchestration/quote.md): Returns one or more quotes for a given asset route and amount, including transaction payloads ready to sign.
+- [GET /supported-assets](https://docs.m0.org/raw/api-reference/orchestration/supported-assets.md): Returns a list of all tokens that can be used as source or destination assets when requesting quotes.
+- [TypeScript Type Generation](https://docs.m0.org/raw/api-reference/orchestration/type-generation.md): Generate TypeScript types for the M0 Orchestration API directly from the OpenAPI specification.
+- [Changelog](https://docs.m0.org/raw/api-reference/protocol/changelog.md): Log of notable changes to the M0 Protocol API — new queries, deprecations, and fixes.
+- [Protocol API](https://docs.m0.org/raw/api-reference/protocol/overview.md): Query on-chain M0 protocol data — token supplies, holder balances, yields, and configuration — via GraphQL.
+- [Collateral Composition](https://docs.m0.org/raw/api-reference/protocol/recipes/collateral-composition.md): Retrieve current collateral stats, daily averages, and time-series grouped by remaining term and on-chain tokens.
+- [Daily Yields](https://docs.m0.org/raw/api-reference/protocol/recipes/daily-yields.md): Retrieve daily yield accrual data for various stablecoins using the GraphQL API.
+- [Earner Rate History](https://docs.m0.org/raw/api-reference/protocol/recipes/earner-rate-history.md): Query snapshots of the earner rate over time.
+- [Minter Daily Expenses](https://docs.m0.org/raw/api-reference/protocol/recipes/minter-daily-expenses.md): Query the daily expenses of a Minter by address over a given date range.
+- [Network Supply](https://docs.m0.org/raw/api-reference/protocol/recipes/network-supply.md): Query the current network supply and reserves (collateral) of the M0 Protocol.
+- [Protocol Configuration](https://docs.m0.org/raw/api-reference/protocol/recipes/protocol-config.md): Query historical values for protocol configuration parameters.
+- [Token Holders](https://docs.m0.org/raw/api-reference/protocol/recipes/token-holders.md): Query holder information across different chains in the M0 ecosystem.
+- [Token Overview](https://docs.m0.org/raw/api-reference/protocol/recipes/token-overview.md): Retrieve token data for M0 protocol tokens including metadata, holders, and supply information.
+
+## Resources
+
+- [Deployments](https://docs.m0.org/raw/resources/addresses.md): Contract addresses for all M0 ecosystem platforms.
+- [M0 Platform Deployments](https://docs.m0.org/raw/resources/addresses/m0-platform.md): Contract addresses for the M0 platform, TTG governance, and Wrapped M across all supported chains.
+- [MGUSD Deployments](https://docs.m0.org/raw/resources/addresses/mgusd-platform.md): Contract addresses for MGUSD on Stellar.
+- [PYUSDx Platform Deployments](https://docs.m0.org/raw/resources/addresses/pyusdx-platform.md): Contract addresses for the PYUSDx platform across all supported chains.
+- [Audits](https://docs.m0.org/raw/resources/audits.md): Audit reports for M0, TTG, Wrapped M, and related smart contracts.
+- [Glossary](https://docs.m0.org/raw/resources/glossary.md): Glossary of main concepts across the M0 infrastructure.
+
+## Agents
+
+- [LLMs.txt](https://docs.m0.org/raw/agents/llms-txt.md): How to get AI tools to understand M0 protocol documentation, terminology, and best practices.
+- [MCP Server](https://docs.m0.org/raw/agents/mcp-server.md): Use M0 documentation in your AI assistants with Model Context Protocol support.
+- [Skills](https://docs.m0.org/raw/agents/skills.md): Install M0 skills to give AI coding agents deep knowledge of the M0 protocol, stablecoin integration, and smart contracts.

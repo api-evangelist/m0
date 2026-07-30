@@ -1,0 +1,61 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/m0-orchestration-openapi-original.json
+docs: https://docs.m0.org/api-reference/orchestration/overview
+format: custom
+envelope:
+  media_type: application/json
+  fields:
+    code: Stable machine-readable ErrorCode enum value; branch on this, not the HTTP status.
+    message: Human-readable description of the failure. Safe to surface in UI.
+    requestId: Per-request correlation id (nullable); matches server logs. Include when filing support tickets.
+  required:
+  - code
+  - message
+notes: >-
+  Errors are NOT RFC 9457 problem+json; M0 returns a custom ErrorBody envelope
+  whose `code` field is a stable enum (ErrorCode) mapping 1:1 to an error type.
+  Multiple errors may share an HTTP status as the API evolves.
+error_codes:
+- code: QuoteError
+  status: 500
+  area: quote
+- code: BadQuoteRequest
+  status: 400
+  area: quote
+- code: NoQuotesAvailable
+  status: 404
+  area: quote
+- code: BadOrderRequest
+  status: 400
+  area: orders
+- code: OrderNotFound
+  status: 404
+  area: orders
+- code: OrderNotCancellable
+  status: 409
+  area: orders
+- code: CancelOrderError
+  status: 500
+  area: orders
+- code: BadTopologyRequest
+  status: 400
+  area: topology
+- code: BadPermitRequest
+  status: 400
+  area: permit
+- code: PermitNotSupported
+  status: 422
+  area: permit
+- code: PermitExpired
+  status: 410
+  area: permit
+- code: InvalidPermitSignature
+  status: 400
+  area: permit
+- code: PermitQuoteError
+  status: 500
+  area: permit
+- code: PermitBuildError
+  status: 500
+  area: permit

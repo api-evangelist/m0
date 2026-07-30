@@ -1,0 +1,31 @@
+generated: '2026-07-20'
+method: probed
+source: live probes of M0 hosts
+note: >-
+  No /.well-known/ discovery documents were served by any M0 host. Recorded for
+  auditability; nothing returned 200 so no raw files were saved and no WellKnown
+  catalog pointer is emitted.
+hosts:
+- host: https://gateway.m0.xyz
+  documents:
+  - {path: /.well-known/security.txt, status: 403}
+  - {path: /.well-known/openid-configuration, status: 403}
+  - {path: /.well-known/oauth-authorization-server, status: 403}
+  - {path: /.well-known/api-catalog, status: 403}
+  - {path: /.well-known/ai-plugin.json, status: 403}
+- host: https://m0.org
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+- host: https://docs.m0.org
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+- host: https://protocol-api.m0.org
+  documents:
+  - {path: /.well-known/security.txt, status: 500}
+  - {path: /.well-known/openid-configuration, status: 500}

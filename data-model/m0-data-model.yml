@@ -1,0 +1,93 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/m0-orchestration-openapi-original.json
+entities:
+- name: Order
+  description: A cross-chain limit order with its on-chain state plus indexer enrichment.
+  key: orderId
+  fields:
+  - orderId
+  - version
+  - nonce
+  - sender
+  - recipient
+  - originChainId
+  - destChainId
+  - tokenIn
+  - tokenOut
+  - amountIn
+  - amountOut
+  - designatedSolver
+  - createdAt
+  - fillDeadline
+  - status
+  - fills
+- name: OrderSummary
+  description: Lightweight order projection returned by the list endpoint.
+  key: orderId
+- name: Fill
+  description: A single fill event against an order (partial fills supported).
+  fields:
+  - filledAt
+  - chainId
+  - transactionHash
+  - solver
+  - amountInToRelease
+  - amountOutFilled
+- name: Asset
+  description: A token usable as source or destination in a quote.
+  key: address
+  fields:
+  - chain
+  - runtime
+  - address
+  - decimals
+  - symbol
+  - name
+  - m0Extension
+- name: Quote
+  description: A quote for moving/converting between assets, with signable payloads.
+  fields:
+  - route
+  - recipient
+  - amountIn
+  - amountOut
+  - estFillTime
+  - payloads
+- name: Route
+  description: A source/destination pairing across chains.
+- name: PermitRecipe
+  description: An intent-based, signable permit operation (swap / limit-order / AMM swap).
+relationships:
+- from: Order
+  to: Fill
+  type: has_many
+  via: fills
+- from: Order
+  to: Chain
+  type: belongs_to
+  via: originChainId
+- from: Order
+  to: Chain
+  type: belongs_to
+  via: destChainId
+- from: Order
+  to: Asset
+  type: belongs_to
+  via: tokenIn
+- from: Order
+  to: Asset
+  type: belongs_to
+  via: tokenOut
+- from: Quote
+  to: Route
+  type: has_one
+  via: route
+- from: Route
+  to: Asset
+  type: references
+  via: source/destination
+notes: >-
+  Ids are on-chain identifiers: orderId is a hex order hash; chains are numeric
+  EVM chain ids (plus Solana/SVM runtime); asset addresses are on-chain token
+  contract addresses.

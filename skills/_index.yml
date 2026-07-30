@@ -1,0 +1,37 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.m0.org/agents/skills
+description: >-
+  Agent Skills published by M0 as downloadable markdown instruction files
+  (SKILL.md format) for AI coding agents. Saved verbatim from the provider.
+install:
+  claude_code: Download the skill file into your .claude/skills/ directory.
+  cursor: Reference the skill URL in .cursor/rules.
+skills:
+- file: m0-protocol.md
+  name: M0 Protocol
+  source: https://docs.m0.org/skills/m0-protocol.md
+  description: >-
+    Core protocol concepts, the M token, minting/burning, TTG governance, and
+    core contract addresses for building code against M0 protocol contracts.
+- file: m0-stablecoin-integration.md
+  name: Stablecoin Integration
+  source: https://docs.m0.org/skills/m0-stablecoin-integration.md
+  description: >-
+    Building with Wrapped M, extension design templates, and cross-chain
+    bridging patterns for integrating a stablecoin on M0.
+- file: m0-orchestration-swap.md
+  name: Quote and settle a cross-chain stablecoin swap on M0
+  api: openapi/m0-orchestration-openapi-original.json
+  method: generated
+  operations:
+  - quote_getSupportedAssets
+  - quote_quote
+  - permit_permitQuote
+  - permit_permitBuild
+  - order_getOrder
+  - order_getOrders
+  - order_cancelOrder
+  description: >-
+    Generated API-flow skill grounded in the Orchestration API operationIds:
+    discover assets, quote, build an EIP-2612 permit, and track/cancel orders.

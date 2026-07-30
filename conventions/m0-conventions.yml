@@ -1,0 +1,53 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/m0-orchestration-openapi-original.json
+docs: https://docs.m0.org/api-reference/orchestration/overview
+authentication:
+  style: api-key
+  header: x-api-key
+  note: >-
+    Orchestration REST API keys go in the x-api-key header; the Protocol GraphQL
+    API takes the key in the Authorization header. Credentials are issued by the
+    M0 team on request.
+  cross_reference: authentication/m0-authentication.yml
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /v1/orchestration
+pagination:
+  style: offset
+  params:
+  - limit
+  - offset
+  response_fields:
+  - orders
+  - total
+  - limit
+  - offset
+  applies_to:
+  - GET /orders
+idempotency:
+  supported: false
+  note: >-
+    No idempotency-key header/parameter is documented or present in the OpenAPI.
+    Order safety is instead handled on-chain via signed permit recipes and a
+    per-order nonce; the /permit/build + limit-order settlement flow is the
+    intent-based, replay-protected path rather than an HTTP idempotency contract.
+request_tracing:
+  field: requestId
+  location: error response body (ErrorBody.requestId)
+  note: Correlation id returned on errors; matches server logs for support tickets.
+error_envelope:
+  media_type: application/json
+  shape: '{ code: ErrorCode (enum), message: string, requestId?: string }'
+  cross_reference: errors/m0-error-codes.yml
+rate_limiting:
+  documented: false
+environments:
+  mainnet: https://gateway.m0.xyz/v1/orchestration
+  stage: https://gateway.stage.m0.xyz/v1/orchestration
+  devnet: https://gateway.dev.m0.xyz/v1/orchestration
+type_generation:
+  tool: openapi-typescript
+  spec: https://gateway.m0.xyz/v1/orchestration/openapi.json
+  cross_reference: https://docs.m0.org/api-reference/orchestration/type-generation

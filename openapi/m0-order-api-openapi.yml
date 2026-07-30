@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: liquidity-api Order API
-  version: ''
+  version: "1.0"
   description: This API provides quotes for moving and converting between M extensions and other stablecoins
 servers:
 - url: https://gateway.m0.xyz/v1/orchestration

@@ -1,0 +1,31 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.m0.org/api-reference/protocol/changelog
+versioning:
+  orchestration_api:
+    scheme: uri-path
+    current: v1
+  protocol_api:
+    scheme: date-based-changelog
+    docs: https://docs.m0.org/api-reference/protocol/changelog
+deprecation:
+  documented: true
+  policy: >-
+    Protocol API deprecations are announced in the dated changelog with an
+    explicit sunset date (e.g. queries deprecated 2025-12-18 with sunset
+    2026-01-08 and a named migration target).
+  docs: https://docs.m0.org/api-reference/protocol/changelog
+  practice: deprecation-with-sunset-date-and-migration-path
+sla:
+  documented: false
+status_page:
+  found: false
+security_audits:
+  documented: true
+  docs: https://docs.m0.org/resources/audits
+  note: >-
+    Smart-contract audit reports published by multiple firms (Quantstamp,
+    Certora, ChainSecurity, OpenZeppelin, Halborn, OtterSec, Consensys
+    Diligence, Sherlock, Guardian Audits, and others) across platform, Wrapped
+    M, extensions, Portals, and Limit Order Protocol.
+deprecated_operations: []

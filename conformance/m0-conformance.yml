@@ -1,0 +1,31 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/m0-orchestration-openapi-original.json
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: Orchestration API publishes an OpenAPI 3.0.1 document.
+- id: oauth2
+  conforms: false
+  evidence: Auth is apiKey (x-api-key header), no oauth2 securityScheme.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a custom ErrorBody envelope (code/message/requestId), not application/problem+json.
+- id: stable-error-codes
+  conforms: true
+  evidence: ErrorCode is a stable machine-readable enum mapping 1:1 to error types.
+- id: offset-pagination
+  conforms: true
+  evidence: GET /orders uses limit/offset with total in the response.
+- id: eip-2612-permit
+  conforms: true
+  evidence: PermitBuild returns EIP-2612 typed data (Eip2612TypedData / Eip712Domain) for gasless approvals.
+- id: erc20
+  conforms: true
+  evidence: M token and Wrapped M are ERC20-compliant tokens per protocol docs.
+- id: smart-contract-audited
+  conforms: true
+  evidence: Multiple published third-party audit reports (see https://docs.m0.org/resources/audits).
+compliance_certifications:
+  found: false
+  note: No SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP certifications are published; security posture is third-party smart-contract audits.

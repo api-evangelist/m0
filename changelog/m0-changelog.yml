@@ -1,0 +1,43 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.m0.org/api-reference/protocol/changelog
+scheme: date-based
+applies_to: Protocol API (GraphQL)
+current: rolling
+entries:
+- date: '2025-12-18'
+  type: deprecation
+  highlights:
+  - hyperliquid_holder query deprecated; migrate to usdhl_hyperevm_stablecoins (sunset 2026-01-08)
+  - SolanaBridgeEvents query deprecated; migrate to solanaSupply (sunset 2026-01-08)
+- date: '2025-12-15'
+  type: addition
+  highlights:
+  - Prefixed stablecoins queries introduced
+- date: '2025-12-08'
+  type: addition
+  highlights:
+  - MDailyEarningsSnapshots query added for protocol-wide daily earnings data
+- date: '2025-10-28'
+  type: addition
+  highlights:
+  - USDZ queries added for Ethereum and Arbitrum
+  - 0FNS data query added for Ethereum
+- date: '2025-10-06'
+  type: addition
+  highlights:
+  - solanaUsdkSupply query added for Solana
+  - Fixed wrapped $M yield values on Ethereum
+- date: '2025-07-07'
+  type: addition
+  highlights:
+  - Arbitrum support added for $M token data
+  - Changelog page and supply snapshot recipe introduced
+- date: '2025-06-24'
+  type: fix
+  highlights:
+  - MHolderSnapshots corrected for large historical datasets
+- date: '2025-04-01'
+  type: release
+  highlights:
+  - Initial release of the Protocol API

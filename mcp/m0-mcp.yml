@@ -1,0 +1,41 @@
+generated: '2026-07-20'
+method: searched
+status: published
+source: https://docs.m0.org/agents/mcp-server
+server:
+  name: m0-docs
+  transport: http
+  url: https://docs.m0.org/mcp
+  description: >-
+    M0's official hosted, remote MCP server. Exposes the M0 protocol and
+    platform documentation, glossary, and deployed contract addresses to AI
+    assistants over the Model Context Protocol (streamable HTTP transport).
+install:
+  claude_code: claude mcp add --transport http m0-docs https://docs.m0.org/mcp
+  config:
+    mcpServers:
+      m0-docs:
+        url: https://docs.m0.org/mcp
+  clients:
+  - Claude Desktop
+  - Claude Code
+  - Cursor
+  - VS Code
+  - Windsurf
+tools:
+- name: list-pages
+  description: Retrieve all documentation pages with metadata.
+- name: get-page
+  description: Fetch full markdown content for a specific documentation page.
+- name: search-docs
+  description: Full-text search across the M0 documentation.
+- name: get-section
+  description: Retrieve all pages within a documentation section.
+- name: get-glossary
+  description: Provide M0 protocol terminology definitions.
+- name: get-addresses
+  description: Look up deployed contract addresses across supported chains.
+notes: >-
+  This MCP server serves documentation/knowledge tools, not the Orchestration
+  REST or Protocol GraphQL data APIs. Those remain key-authenticated HTTP/GraphQL
+  surfaces (see openapi/ and apis.yml).
