@@ -1,9 +1,30 @@
 aid: m0
 name: M0
-description: 'M0 is a company surfaced as a portfolio company of pantera-capital, polychain, ribbit-capital
-  and added to the API Evangelist network as a stub for enrichment. Sector: crypto. This profile is a
-  lead awaiting the enrichment pipeline.'
+description: >-
+  M0 is modular stablecoin infrastructure that lets organizations launch and
+  manage their own custom stablecoins instead of adopting a one-size-fits-all
+  token. Its stack has three independent layers: an application layer for token
+  behavior, rewards, and access controls; a distribution layer for cross-chain
+  liquidity routing; and an issuance layer where teams pick an issuer or become
+  their own. M0 is backed by U.S. Treasury Bill collateral held in special
+  purpose vehicles, and exposes an Orchestration REST API (quotes, cross-chain
+  orders, EIP-2612 permits) plus a Protocol GraphQL API for on-chain data, along
+  with an MCP server and agent skills for AI builders. Used by MetaMask, PayPal,
+  Anchorage, MoonPay, and others.
 url: https://raw.githubusercontent.com/api-evangelist/m0/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/6762be5b6c55f4c330bf115d/6a16e8d2d0a0bd93c8c99688_OG-HP.png
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
@@ -14,16 +35,123 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
 - Crypto
-apis: []
+- Stablecoins
+- Payments
+- Blockchain
+- DeFi
+- Cross-Chain
+- Infrastructure
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- name: M0 Protocol API
+  description: >-
+    GraphQL API to query on-chain M0 protocol data — token supplies, holder balances, yields, and configuration.
+  humanURL: https://docs.m0.org/api-reference/protocol/overview
+  baseURL: https://protocol-api.m0.org/graphql
+  properties:
+  - type: ChangeLog
+    url: changelog/m0-changelog.yml
+- aid: m0:m0-order-api
+  name: M0 Order API
+  description: The Order API from M0 — 3 operation(s) for order.
+  humanURL: https://docs.m0.org/api-reference/introduction
+  baseURL: https://gateway.m0.xyz/v1/orchestration
+  tags:
+  - Order
+  properties:
+  - type: OpenAPI
+    url: openapi/m0-order-api-openapi.yml
+- aid: m0:m0-permit-api
+  name: M0 Permit API
+  description: The Permit API from M0 — 2 operation(s) for permit.
+  humanURL: https://docs.m0.org/api-reference/introduction
+  baseURL: https://gateway.m0.xyz/v1/orchestration
+  tags:
+  - Permit
+  properties:
+  - type: OpenAPI
+    url: openapi/m0-permit-api-openapi.yml
+- aid: m0:m0-quote-api
+  name: M0 Quote API
+  description: The Quote API from M0 — 2 operation(s) for quote.
+  humanURL: https://docs.m0.org/api-reference/introduction
+  baseURL: https://gateway.m0.xyz/v1/orchestration
+  tags:
+  - Quote
+  properties:
+  - type: OpenAPI
+    url: openapi/m0-quote-api-openapi.yml
+- aid: m0:m0-topology-api
+  name: M0 Topology API
+  description: The Topology API from M0 — 2 operation(s) for topology.
+  humanURL: https://docs.m0.org/api-reference/introduction
+  baseURL: https://gateway.m0.xyz/v1/orchestration
+  tags:
+  - Topology
+  properties:
+  - type: OpenAPI
+    url: openapi/m0-topology-api-openapi.yml
 common:
+- type: DeveloperPortal
+  url: https://docs.m0.org/
+- type: Documentation
+  url: https://docs.m0.org/
+- type: APIReference
+  url: https://docs.m0.org/api-reference/introduction
+- type: GettingStarted
+  url: https://docs.m0.org/get-started/how-it-works
+- type: Blog
+  url: https://research.m0.org
+- type: GitHubOrganization
+  url: https://github.com/m0-foundation
+- type: SignUp
+  url: https://dashboard.m0.org
+- type: Support
+  url: https://m0.org/contact-us
+- type: TermsOfService
+  url: https://m0.org/terms-conditions
+- type: PrivacyPolicy
+  url: https://m0.org/privacy-policy
+- type: MCPServer
+  url: mcp/m0-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/m0-llms.txt
+- type: Authentication
+  url: authentication/m0-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/m0-agentic-access.yml
+- type: ErrorCatalog
+  url: errors/m0-error-codes.yml
+- type: Conventions
+  url: conventions/m0-conventions.yml
+- type: DataModel
+  url: data-model/m0-data-model.yml
+- type: Conformance
+  url: conformance/m0-conformance.yml
+- type: Lifecycle
+  url: lifecycle/m0-lifecycle.yml
+- type: ChangeLog
+  url: changelog/m0-changelog.yml
+- type: Deprecation
+  url: https://docs.m0.org/api-reference/protocol/changelog
+- type: DomainSecurity
+  url: security/m0-domain-security.yml
+- type: Overlay
+  url: overlays/m0-orchestration-overlay.yaml
 - type: Website
-  url: https://m0.xyz/
+  url: https://m0.org/
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1
