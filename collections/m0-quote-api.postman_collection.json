@@ -1,0 +1,389 @@
+{
+  "item": [
+    {
+      "id": "16e36d83-8d71-4456-b97f-c04d2144a207",
+      "name": "Quote",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "9bc65245-3307-4652-a49f-61ccbf80ab96",
+          "name": "quote quote",
+          "request": {
+            "name": "quote quote",
+            "description": {
+              "content": "Get quotes for moving or converting assets using the M Liquidity Network.\n\nReturns a non-empty array of `Quote` results ranked by best `amountOut`,\nfastest `estFillTime`, and fewest payloads (in that order). The response\nis capped at `maxNumQuotes` (default `1`); raise it to receive more than\none.\n\nLimit-order routes can contribute several quotes — one per exclusive\nsolver (each bound to its own solver on-chain, see `PayloadSolver`).\nNon-exclusive (open-fill) offers are collapsed to the single best price,\nsince they differ only in `amountOut`.\n\n**Error responses**\n\nAll errors return `commons.ErrorBody` (`{ code, message, requestId }`).\nBranch on `code`, not the HTTP status — multiple errors may share a\nstatus as the API evolves. The `requestId` mirrors the per-request id\nin server logs; include it when filing a support ticket.\n\n| Status | `code`               | When                                                                                      |\n| ------ | -------------------- | ----------------------------------------------------------------------------------------- |\n| 400    | `BadQuoteRequest`    | Missing/invalid fields, `source` == `destination`, both `include` and `exclude` set, or an unknown asset. |\n| 404    | `NoQuotesAvailable`  | Structurally valid, but no provider could quote this route + amount.                       |\n| 500    | `QuoteError`         | Unexpected internal failure while computing or simulating quotes; may succeed on retry.   |",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "quote"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f677356a-c0e5-49c4-9360-74db983181de",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"route\": {\n      \"source\": {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      \"destination\": {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    },\n    \"recipient\": \"string\",\n    \"amountIn\": \"string\",\n    \"amountOut\": \"string\",\n    \"estFillTime\": 9801,\n    \"payloads\": [\n      {\n        \"provider\": \"string\",\n        \"data\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"annotation\": \"string\",\n        \"solver\": {\n          \"address\": \"string\",\n          \"exclusive\": false,\n          \"name\": \"string\",\n          \"feeBps\": 9489\n        }\n      },\n      {\n        \"provider\": \"string\",\n        \"data\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"annotation\": \"string\",\n        \"solver\": {\n          \"address\": \"string\",\n          \"exclusive\": true,\n          \"name\": \"string\",\n          \"feeBps\": 1193\n        }\n      }\n    ]\n  },\n  {\n    \"route\": {\n      \"source\": {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      },\n      \"destination\": {\n        \"chain\": \"<string>\",\n        \"address\": \"<string>\"\n      }\n    },\n    \"recipient\": \"string\",\n    \"amountIn\": \"string\",\n    \"amountOut\": \"string\",\n    \"estFillTime\": 9404,\n    \"payloads\": [\n      {\n        \"provider\": \"string\",\n        \"data\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"annotation\": \"string\",\n        \"solver\": {\n          \"address\": \"string\",\n          \"exclusive\": false,\n          \"name\": \"string\",\n          \"feeBps\": 9101\n        }\n      },\n      {\n        \"provider\": \"string\",\n        \"data\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"annotation\": \"string\",\n        \"solver\": {\n          \"address\": \"string\",\n          \"exclusive\": true,\n          \"name\": \"string\",\n          \"feeBps\": 86\n        }\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98afff1b-c89a-41c2-bec1-c1ea2e477925",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"OrderNotFound\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b693a35-89b6-4c9f-99ee-c14bca118ac9",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"OrderNotFound\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b18e3823-f44c-4dd9-ba0e-0a9fda8f556e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"OrderNotFound\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "466e548c-b674-4e24-bfd1-df46d955a48a",
+          "name": "quote get Supported Assets",
+          "request": {
+            "name": "quote get Supported Assets",
+            "description": {
+              "content": "Get all assets supported for quotes",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "supported-assets"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "d26f0309-4937-40ab-b0a5-4f20ae01394b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "supported-assets"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"chain\": \"<string>\",\n    \"runtime\": \"evm\",\n    \"address\": \"string\",\n    \"icon\": \"string\",\n    \"decimals\": 3089,\n    \"symbol\": \"string\",\n    \"name\": \"string\",\n    \"m0Extension\": false\n  },\n  {\n    \"chain\": \"<string>\",\n    \"runtime\": \"evm\",\n    \"address\": \"string\",\n    \"icon\": \"string\",\n    \"decimals\": 7778,\n    \"symbol\": \"string\",\n    \"name\": \"string\",\n    \"m0Extension\": false\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.m0.xyz/v1/orchestration",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "b8556f3d-260c-4608-8a95-a3f578cd85b8",
+    "name": "liquidity-api Order Quote API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This API provides quotes for moving and converting between M extensions and other stablecoins",
+      "type": "text/plain"
+    }
+  }
+}

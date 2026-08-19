@@ -1,0 +1,56 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "liquidity-api Order Quote API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Quote",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "quote_quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.m0.xyz/v1/orchestration/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get quotes for moving or converting assets using the M Liquidity Network.\n\nReturns a non-empty array of `Quote` results ranked by best `amountOut`,\nfastest `estFillTime`, and fewest payloads (in that order). The response\nis capped at `maxNumQuotes` (default `1`); raise it to receive more than\none.\n\nLimit-order routes can contribute several quotes — one per exclusive\nsolver (each bound to its own solver on-chain, see `PayloadSolver`).\nNon-exclusive (open-fill) offers are collapsed to the single b"
+        },
+        {
+          "info": {
+            "name": "quote_getSupportedAssets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.m0.xyz/v1/orchestration/supported-assets",
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get all assets supported for quotes"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,60 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "liquidity-api Order Permit API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Permit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "permit_permitQuote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.m0.xyz/v1/orchestration/permit/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get quotes for the gasless-approval (EIP-2612 permit) flow.\n\nLike `/quote`, but every returned quote's approvals are satisfied by\nsigning an off-chain EIP-2612 permit instead of broadcasting a separate\n`approve` transaction — collapsing approve + action into a single\non-chain transaction. **EVM only.**\n\nEach `PermitQuote` carries one `PermitRecipe` per leg (in execution\norder); sign each recipe's `typedData`, then either POST the signed\nrecipes to `/permit/build` to receive executable payloads, "
+        },
+        {
+          "info": {
+            "name": "permit_permitBuild",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.m0.xyz/v1/orchestration/permit/build",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Exchange signed permit recipes for executable transaction payloads.\n\nEcho back the `PermitRecipe`s from `/permit/quote`, each paired with\nthe user's EIP-2612 signature over its `typedData`. Returns one\n`Payload` per recipe, in order — the encoded `*WithPermit` call.\n\nThe server re-validates each recipe before encoding (permit `value`\nmatches `amountIn`, `spender` matches the operation target, `deadline`\nnot expired, and the recovered signer equals the permit `owner`).\n\n**Error responses**\n\nAll e"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

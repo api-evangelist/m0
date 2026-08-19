@@ -1,0 +1,621 @@
+{
+  "item": [
+    {
+      "id": "c20cb124-0f10-414d-9648-06fb89c94a2e",
+      "name": "Permit",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0933257a-0230-4cd6-a51c-0f6d67f3130f",
+          "name": "permit permit Quote",
+          "request": {
+            "name": "permit permit Quote",
+            "description": {
+              "content": "Get quotes for the gasless-approval (EIP-2612 permit) flow.\n\nLike `/quote`, but every returned quote's approvals are satisfied by\nsigning an off-chain EIP-2612 permit instead of broadcasting a separate\n`approve` transaction — collapsing approve + action into a single\non-chain transaction. **EVM only.**\n\nEach `PermitQuote` carries one `PermitRecipe` per leg (in execution\norder); sign each recipe's `typedData`, then either POST the signed\nrecipes to `/permit/build` to receive executable payloads, or encode\nthe `*WithPermit` call locally from the recipe.\n\nOnly routes whose every leg is permit-capable are returned.\n\n**Error responses**\n\nAll errors return `commons.ErrorBody` (`{ code, message, requestId }`).\nBranch on `code`, not the HTTP status.\n\n| Status | `code`              | When                                                                    |\n| ------ | ------------------- | ----------------------------------------------------------------------- |\n| 400    | `BadPermitRequest`  | Missing/invalid fields, `source` == `destination`, or an unknown asset. |\n| 404    | `PermitNotSupported`| Structurally valid, but no permit-capable path exists for this route.   |\n| 500    | `PermitQuoteError`  | Unexpected internal failure while computing permit quotes.              |",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "permit",
+                "quote"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "42d94855-baac-42f9-afa3-b2895f45128a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"requestId\": \"string\",\n  \"quotes\": [\n    {\n      \"route\": {\n        \"source\": {\n          \"chain\": \"<string>\",\n          \"address\": \"<string>\"\n        },\n        \"destination\": {\n          \"chain\": \"<string>\",\n          \"address\": \"<string>\"\n        }\n      },\n      \"recipient\": \"string\",\n      \"amountIn\": \"string\",\n      \"amountOut\": \"string\",\n      \"minAmountOut\": \"string\",\n      \"estFillTime\": 3883,\n      \"expiresAt\": 9220,\n      \"recipes\": [\n        {\n          \"provider\": \"<string>\",\n          \"annotation\": \"string\",\n          \"chain\": \"<string>\",\n          \"chainId\": 252,\n          \"spender\": \"string\",\n          \"value\": \"string\",\n          \"typedData\": {\n            \"domain\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"message\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"operation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"functionSignature\": \"string\",\n          \"solver\": {\n            \"address\": \"string\",\n            \"exclusive\": true,\n            \"name\": \"string\",\n            \"feeBps\": 8106\n          }\n        },\n        {\n          \"provider\": \"<string>\",\n          \"annotation\": \"string\",\n          \"chain\": \"<string>\",\n          \"chainId\": 2531,\n          \"spender\": \"string\",\n          \"value\": \"string\",\n          \"typedData\": {\n            \"domain\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"message\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"operation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"functionSignature\": \"string\",\n          \"solver\": {\n            \"address\": \"string\",\n            \"exclusive\": false,\n            \"name\": \"string\",\n            \"feeBps\": 1809\n          }\n        }\n      ]\n    },\n    {\n      \"route\": {\n        \"source\": {\n          \"chain\": \"<string>\",\n          \"address\": \"<string>\"\n        },\n        \"destination\": {\n          \"chain\": \"<string>\",\n          \"address\": \"<string>\"\n        }\n      },\n      \"recipient\": \"string\",\n      \"amountIn\": \"string\",\n      \"amountOut\": \"string\",\n      \"minAmountOut\": \"string\",\n      \"estFillTime\": 4243,\n      \"expiresAt\": 3791,\n      \"recipes\": [\n        {\n          \"provider\": \"<string>\",\n          \"annotation\": \"string\",\n          \"chain\": \"<string>\",\n          \"chainId\": 3601,\n          \"spender\": \"string\",\n          \"value\": \"string\",\n          \"typedData\": {\n            \"domain\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"message\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"operation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"functionSignature\": \"string\",\n          \"solver\": {\n            \"address\": \"string\",\n            \"exclusive\": false,\n            \"name\": \"string\",\n            \"feeBps\": 2502\n          }\n        },\n        {\n          \"provider\": \"<string>\",\n          \"annotation\": \"string\",\n          \"chain\": \"<string>\",\n          \"chainId\": 447,\n          \"spender\": \"string\",\n          \"value\": \"string\",\n          \"typedData\": {\n            \"domain\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"message\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"operation\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"functionSignature\": \"string\",\n          \"solver\": {\n            \"address\": \"string\",\n            \"exclusive\": true,\n            \"name\": \"string\",\n            \"feeBps\": 9107\n          }\n        }\n      ]\n    }\n  ],\n  \"issues\": {\n    \"balance\": {\n      \"token\": \"string\",\n      \"actual\": \"string\",\n      \"expected\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0cbd9057-5ad9-4872-a1e2-70d949a8f145",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ea04c86-30e2-4ae6-b133-27b1be84d036",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5348135f-ef0b-4a31-b0e6-b875ec7ac5bc",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "quote"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"route\": {\n    \"source\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    \"destination\": {\n      \"chain\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  },\n  \"amountIn\": \"<string>\",\n  \"sender\": \"<string>\",\n  \"funder\": \"<string>\",\n  \"recipient\": \"<string>\",\n  \"maxNumQuotes\": \"<integer>\",\n  \"providers\": {\n    \"include\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"exclude\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9a45c7e6-d228-4dff-bd9d-22f7894357c3",
+          "name": "permit permit Build",
+          "request": {
+            "name": "permit permit Build",
+            "description": {
+              "content": "Exchange signed permit recipes for executable transaction payloads.\n\nEcho back the `PermitRecipe`s from `/permit/quote`, each paired with\nthe user's EIP-2612 signature over its `typedData`. Returns one\n`Payload` per recipe, in order — the encoded `*WithPermit` call.\n\nThe server re-validates each recipe before encoding (permit `value`\nmatches `amountIn`, `spender` matches the operation target, `deadline`\nnot expired, and the recovered signer equals the permit `owner`).\n\n**Error responses**\n\nAll errors return `commons.ErrorBody` (`{ code, message, requestId }`).\nBranch on `code`, not the HTTP status.\n\n| Status | `code`                   | When                                                          |\n| ------ | ------------------------ | ------------------------------------------------------------- |\n| 400    | `BadPermitRequest`       | Malformed body, or a recipe that fails internal consistency.  |\n| 410    | `PermitExpired`          | A recipe's permit `deadline` has already passed.              |\n| 422    | `InvalidPermitSignature` | Signature does not recover to the permit `owner`.             |\n| 500    | `PermitBuildError`       | Unexpected internal failure while encoding the payloads.      |",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "permit",
+                "build"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": \"<object>\",\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": \"<object>\",\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "95fcb4f8-4432-4ec3-af7b-19d736b49f67",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "build"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"requestId\": \"string\",\n  \"payloads\": [\n    {\n      \"provider\": \"string\",\n      \"data\": {\n        \"chain\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"chainId\": 6832,\n        \"data\": \"string\",\n        \"to\": \"string\",\n        \"type\": \"evm\",\n        \"value\": \"string\"\n      },\n      \"annotation\": \"string\",\n      \"solver\": {\n        \"address\": \"<string>\",\n        \"exclusive\": \"<boolean>\",\n        \"name\": \"<string>\",\n        \"feeBps\": \"<integer>\"\n      }\n    },\n    {\n      \"provider\": \"string\",\n      \"data\": {\n        \"chain\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"chainId\": 1295,\n        \"data\": \"string\",\n        \"to\": \"string\",\n        \"type\": \"evm\",\n        \"value\": \"string\"\n      },\n      \"annotation\": \"string\",\n      \"solver\": {\n        \"address\": \"<string>\",\n        \"exclusive\": \"<boolean>\",\n        \"name\": \"<string>\",\n        \"feeBps\": \"<integer>\"\n      }\n    }\n  ],\n  \"issues\": {\n    \"balance\": {\n      \"token\": \"string\",\n      \"actual\": \"string\",\n      \"expected\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "911c0550-7991-4526-9875-f84ad15064f2",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "build"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c6c6b6e-24f6-43c3-9d19-5f159be3c088",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "build"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Gone",
+              "code": 410,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6a732e2-bb10-4f44-9e20-1cb0f3c42387",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "build"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "22e18875-2d3a-4a23-af5e-be3e58b6bf82",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "permit",
+                    "build"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"signedRecipes\": [\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    },\n    {\n      \"recipe\": {\n        \"provider\": \"<string>\",\n        \"annotation\": \"<string>\",\n        \"chain\": \"<string>\",\n        \"chainId\": \"<integer>\",\n        \"spender\": \"<string>\",\n        \"value\": \"<string>\",\n        \"typedData\": {\n          \"domain\": {\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"version\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"chainId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"verifyingContract\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          \"message\": {\n            \"owner\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"spender\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"nonce\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deadline\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"operation\": {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"functionSignature\": \"<string>\",\n        \"solver\": {\n          \"address\": \"<string>\",\n          \"exclusive\": \"<boolean>\",\n          \"name\": \"<string>\",\n          \"feeBps\": \"<integer>\"\n        }\n      },\n      \"signature\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"PermitExpired\",\n  \"message\": \"string\",\n  \"requestId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.m0.xyz/v1/orchestration",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "49df6bd5-32b0-4a6a-b20e-2c5463791ab9",
+    "name": "liquidity-api Order Permit API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This API provides quotes for moving and converting between M extensions and other stablecoins",
+      "type": "text/plain"
+    }
+  }
+}

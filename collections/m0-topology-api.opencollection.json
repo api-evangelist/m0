@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "liquidity-api Order Topology API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Topology",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "topology_getRoutes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.m0.xyz/v1/orchestration/topology/routes",
+            "params": [
+              {
+                "name": "sourceChain",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sourceAddress",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Returns all known routes in the system. Routes are seeded from the\nstatic asset graph on startup and enriched by live quote traffic.\nThis is a read-only view of routing knowledge — not the routing\nlogic itself. Use lastUsed and totalQuoteCount to gauge confidence.\n\n**Error responses**\n\nErrors return `commons.ErrorBody` (`{ code, message, requestId }`);\nbranch on `code`, not the HTTP status.\n\n| Status | `code`               | When                                                                   "
+        },
+        {
+          "info": {
+            "name": "topology_getRouteStats",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.m0.xyz/v1/orchestration/topology/stats",
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Aggregated statistics about route usage"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

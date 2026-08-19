@@ -1,0 +1,129 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "liquidity-api Order API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Order",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "order_cancelOrder",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.m0.xyz/v1/orchestration/orders/:originChain/:orderId/cancel",
+            "params": [
+              {
+                "name": "originChain",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Build a cancel transaction for an existing limit order.\n\nThe returned `TransactionPayload` carries its own `chain` (and\n`chainId` for EVM payloads) indicating where the transaction must\nbe broadcast:\n\n  * **Same-chain orders** (origin == destination): broadcast on the\n    order's chain. The payload's `chain` matches the URL `chain`.\n  * **Cross-chain orders** (origin != destination): the cancel must\n    be initiated on the order's **destination chain**, which then\n    dispatches a CancelReport m"
+        },
+        {
+          "info": {
+            "name": "order_getOrder",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.m0.xyz/v1/orchestration/orders/:originChain/:orderId",
+            "params": [
+              {
+                "name": "originChain",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "orderId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get full on-chain state plus indexer enrichment for a single order.\n\n**Error responses**\n\nErrors return `commons.ErrorBody` (`{ code, message, requestId }`);\nbranch on `code`, not the HTTP status.\n\n| Status | `code`            | When                                                          |\n| ------ | ----------------- | ------------------------------------------------------------- |\n| 400    | `BadOrderRequest` | Malformed path params: unknown chain or bad `orderId`.        |\n| 404    | `Order"
+        },
+        {
+          "info": {
+            "name": "order_getOrders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.m0.xyz/v1/orchestration/orders",
+            "params": [
+              {
+                "name": "sender",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "originChainId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destChainId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "List orders with optional filters"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
