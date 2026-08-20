@@ -85,6 +85,8 @@ apis:
   humanURL: https://docs.m0.org/api-reference/introduction
   baseURL: https://gateway.m0.xyz/v1/orchestration
   tags:
+  - Quotes
+  tags_raw:
   - Quote
   properties:
   - type: OpenAPI
