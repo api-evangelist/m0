@@ -1,7 +1,7 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   title: liquidity-api Order Topology API
-  version: "1.0"
+  version: '1.0'
   description: This API provides quotes for moving and converting between M extensions and other stablecoins
 servers:
 - url: https://gateway.m0.xyz/v1/orchestration
@@ -48,13 +48,13 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/Chain'
-          nullable: true
       - name: sourceAddress
         in: query
         required: false
         schema:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
       responses:
         '200':
           description: ''
@@ -90,28 +90,22 @@ paths:
       - ApiKeyAuth: []
 components:
   schemas:
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
+    TopologyRouteProvider:
+      title: TopologyRouteProvider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Providers'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        quoteCount:
+          type: integer
+      required:
+      - provider
+      - quoteCount
     ErrorBody:
       title: ErrorBody
       type: object
@@ -126,123 +120,15 @@ components:
           type: string
           description: Human-readable description of what went wrong. Safe to surface in UI.
         requestId:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: 'Per-request correlation id (matches the `requestId` field in
 
             server logs). Include this when filing support tickets.'
       required:
       - code
       - message
-    TopologyRoute:
-      title: TopologyRoute
-      type: object
-      properties:
-        source:
-          $ref: '#/components/schemas/AssetAddress'
-        destination:
-          $ref: '#/components/schemas/AssetAddress'
-        providers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TopologyRouteProvider'
-        lastUsed:
-          type: string
-          format: date-time
-          nullable: true
-        totalQuoteCount:
-          type: integer
-      required:
-      - source
-      - destination
-      - providers
-      - totalQuoteCount
-    AddressFrequency:
-      title: AddressFrequency
-      type: object
-      properties:
-        address:
-          type: string
-        count:
-          type: integer
-      required:
-      - address
-      - count
-    TopologyRouteProvider:
-      title: TopologyRouteProvider
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Providers'
-        lastUsed:
-          type: string
-          format: date-time
-          nullable: true
-        quoteCount:
-          type: integer
-      required:
-      - provider
-      - quoteCount
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
-          type: string
-      required:
-      - chain
-      - address
-    TopologyRouteStats:
-      title: TopologyRouteStats
-      type: object
-      properties:
-        totalRoutes:
-          type: integer
-        activeRoutes:
-          type: integer
-        collectingSince:
-          type: string
-          format: date-time
-          nullable: true
-        lastUpdated:
-          type: string
-          format: date-time
-          nullable: true
-        hottestPaths:
-          type: array
-          items:
-            $ref: '#/components/schemas/TopologyRoute'
-        topSenders:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressFrequency'
-        topRecipients:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressFrequency'
-      required:
-      - totalRoutes
-      - activeRoutes
-      - hottestPaths
-      - topSenders
-      - topRecipients
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
     ErrorCode:
       title: ErrorCode
       type: string
@@ -268,6 +154,125 @@ components:
         in the OpenAPI spec). Branch on this rather than on the HTTP status
 
         code — multiple errors may share a status as the API evolves.'
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
+    TopologyRouteStats:
+      title: TopologyRouteStats
+      type: object
+      properties:
+        totalRoutes:
+          type: integer
+        activeRoutes:
+          type: integer
+        collectingSince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        lastUpdated:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        hottestPaths:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopologyRoute'
+        topSenders:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressFrequency'
+        topRecipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressFrequency'
+      required:
+      - totalRoutes
+      - activeRoutes
+      - hottestPaths
+      - topSenders
+      - topRecipients
+    AddressFrequency:
+      title: AddressFrequency
+      type: object
+      properties:
+        address:
+          type: string
+        count:
+          type: integer
+      required:
+      - address
+      - count
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    TopologyRoute:
+      title: TopologyRoute
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AssetAddress'
+        destination:
+          $ref: '#/components/schemas/AssetAddress'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopologyRouteProvider'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        totalQuoteCount:
+          type: integer
+      required:
+      - source
+      - destination
+      - providers
+      - totalQuoteCount
+    AssetAddress:
+      title: AssetAddress
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        address:
+          type: string
+      required:
+      - chain
+      - address
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

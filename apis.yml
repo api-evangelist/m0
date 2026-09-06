@@ -115,6 +115,8 @@ apis:
   - type: OpenAPI
     url: openapi/m0-topology-api-openapi.yml
 common:
+- type: Sandbox
+  url: sandbox/m0-sandbox.yml
 - type: DeveloperPortal
   url: https://docs.m0.org/
 - type: Documentation

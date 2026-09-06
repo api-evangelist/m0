@@ -1,0 +1,26 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/m-0-orchestration-openapi.json (servers[] + Chain enum testnets)
+api: M0 Orchestration API
+note: >-
+  M0 does not publish a self-serve sandbox with hosted test keys or test cards.
+  Non-production access is provided through named staging/devnet gateways and the
+  chain testnets that the API accepts. Values below are taken verbatim from the
+  published OpenAPI; no test values are invented.
+environments:
+- name: mainnet
+  base_url: https://gateway.m0.xyz/v1/orchestration
+- name: stage
+  base_url: https://gateway.stage.m0.xyz/v1/orchestration
+- name: devnet
+  base_url: https://gateway.dev.m0.xyz/v1/orchestration
+- name: localnet
+  base_url: http://localhost:5600
+test_chains:
+- Sepolia
+- BaseSepolia
+- ArbitrumSepolia
+- SolanaDevnet
+credentials:
+  self_serve: false
+  note: API keys are issued by the M0 team via the contact form (https://m0.org/contact-us).
