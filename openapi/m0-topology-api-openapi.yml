@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: liquidity-api Order Topology API
-  version: '1.0'
+  title: liquidity-api Topology API
+  version: ''
   description: This API provides quotes for moving and converting between M extensions and other stablecoins
 servers:
 - url: https://gateway.m0.xyz/v1/orchestration
@@ -34,11 +34,11 @@ paths:
         branch on `code`, not the HTTP status.
 
 
-        | Status | `code`               | When                                                                       |
+        | Status | `code` | When |
 
         | ------ | -------------------- | -------------------------------------------------------------------------- |
 
-        | 400    | `BadTopologyRequest` | Invalid query params: only one of `sourceChain` / `sourceAddress`, or an unknown asset. |'
+        | 400 | `BadTopologyRequest` | Invalid query params: only one of `sourceChain` / `sourceAddress`, or an unknown asset. |'
       operationId: topology_getRoutes
       tags:
       - Topology
@@ -72,6 +72,8 @@ paths:
                 $ref: '#/components/schemas/ErrorBody'
       security:
       - ApiKeyAuth: []
+      summary: Topology get routes
+      x-summary-source: derived
   /topology/stats:
     get:
       description: Aggregated statistics about route usage
@@ -88,24 +90,10 @@ paths:
                 $ref: '#/components/schemas/TopologyRouteStats'
       security:
       - ApiKeyAuth: []
+      summary: Topology get route stats
+      x-summary-source: derived
 components:
   schemas:
-    TopologyRouteProvider:
-      title: TopologyRouteProvider
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Providers'
-        lastUsed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        quoteCount:
-          type: integer
-      required:
-      - provider
-      - quoteCount
     ErrorBody:
       title: ErrorBody
       type: object
@@ -129,46 +117,6 @@ components:
       required:
       - code
       - message
-    ErrorCode:
-      title: ErrorCode
-      type: string
-      enum:
-      - QuoteError
-      - BadQuoteRequest
-      - NoQuotesAvailable
-      - BadOrderRequest
-      - OrderNotFound
-      - OrderNotCancellable
-      - CancelOrderError
-      - BadTopologyRequest
-      - BadPermitRequest
-      - PermitNotSupported
-      - PermitExpired
-      - InvalidPermitSignature
-      - PermitQuoteError
-      - PermitBuildError
-      description: 'Stable machine-readable identifier for an API error. Each value
-
-        corresponds 1:1 to an error type (and to one `responses` entry
-
-        in the OpenAPI spec). Branch on this rather than on the HTTP status
-
-        code — multiple errors may share a status as the API evolves.'
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
     TopologyRouteStats:
       title: TopologyRouteStats
       type: object
@@ -205,39 +153,6 @@ components:
       - hottestPaths
       - topSenders
       - topRecipients
-    AddressFrequency:
-      title: AddressFrequency
-      type: object
-      properties:
-        address:
-          type: string
-        count:
-          type: integer
-      required:
-      - address
-      - count
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
     TopologyRoute:
       title: TopologyRoute
       type: object
@@ -262,6 +177,79 @@ components:
       - destination
       - providers
       - totalQuoteCount
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    AddressFrequency:
+      title: AddressFrequency
+      type: object
+      properties:
+        address:
+          type: string
+        count:
+          type: integer
+      required:
+      - address
+      - count
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
+    ErrorCode:
+      title: ErrorCode
+      type: string
+      enum:
+      - QuoteError
+      - BadQuoteRequest
+      - NoQuotesAvailable
+      - BadOrderRequest
+      - OrderNotFound
+      - OrderNotCancellable
+      - CancelOrderError
+      - BadTopologyRequest
+      - BadPermitRequest
+      - PermitNotSupported
+      - PermitExpired
+      - InvalidPermitSignature
+      - PermitQuoteError
+      - PermitBuildError
+      description: 'Stable machine-readable identifier for an API error. Each value
+
+        corresponds 1:1 to an error type (and to one `responses` entry
+
+        in the OpenAPI spec). Branch on this rather than on the HTTP status
+
+        code — multiple errors may share a status as the API evolves.'
     AssetAddress:
       title: AssetAddress
       type: object
@@ -273,6 +261,22 @@ components:
       required:
       - chain
       - address
+    TopologyRouteProvider:
+      title: TopologyRouteProvider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Providers'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        quoteCount:
+          type: integer
+      required:
+      - provider
+      - quoteCount
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

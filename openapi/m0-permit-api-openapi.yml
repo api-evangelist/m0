@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: liquidity-api Order Permit API
-  version: '1.0'
+  title: liquidity-api Permit API
+  version: ''
   description: This API provides quotes for moving and converting between M extensions and other stablecoins
 servers:
 - url: https://gateway.m0.xyz/v1/orchestration
@@ -49,15 +49,15 @@ paths:
         Branch on `code`, not the HTTP status.
 
 
-        | Status | `code`              | When                                                                    |
+        | Status | `code` | When |
 
         | ------ | ------------------- | ----------------------------------------------------------------------- |
 
-        | 400    | `BadPermitRequest`  | Missing/invalid fields, `source` == `destination`, or an unknown asset. |
+        | 400 | `BadPermitRequest` | Missing/invalid fields, `source` == `destination`, or an unknown asset. |
 
-        | 404    | `PermitNotSupported`| Structurally valid, but no permit-capable path exists for this route.   |
+        | 404 | `PermitNotSupported`| Structurally valid, but no permit-capable path exists for this route. |
 
-        | 500    | `PermitQuoteError`  | Unexpected internal failure while computing permit quotes.              |'
+        | 500 | `PermitQuoteError` | Unexpected internal failure while computing permit quotes. |'
       operationId: permit_permitQuote
       tags:
       - Permit
@@ -123,6 +123,8 @@ paths:
               - route
               - amountIn
               - sender
+      summary: Permit permit quote
+      x-summary-source: derived
   /permit/build:
     post:
       description: 'Exchange signed permit recipes for executable transaction payloads.
@@ -150,17 +152,17 @@ paths:
         Branch on `code`, not the HTTP status.
 
 
-        | Status | `code`                   | When                                                          |
+        | Status | `code` | When |
 
         | ------ | ------------------------ | ------------------------------------------------------------- |
 
-        | 400    | `BadPermitRequest`       | Malformed body, or a recipe that fails internal consistency.  |
+        | 400 | `BadPermitRequest` | Malformed body, or a recipe that fails internal consistency. |
 
-        | 410    | `PermitExpired`          | A recipe''s permit `deadline` has already passed.              |
+        | 410 | `PermitExpired` | A recipe''s permit `deadline` has already passed. |
 
-        | 422    | `InvalidPermitSignature` | Signature does not recover to the permit `owner`.             |
+        | 422 | `InvalidPermitSignature` | Signature does not recover to the permit `owner`. |
 
-        | 500    | `PermitBuildError`       | Unexpected internal failure while encoding the payloads.      |'
+        | 500 | `PermitBuildError` | Unexpected internal failure while encoding the payloads. |'
       operationId: permit_permitBuild
       tags:
       - Permit
@@ -211,86 +213,33 @@ paths:
                     $ref: '#/components/schemas/SignedPermitRecipe'
               required:
               - signedRecipes
+      summary: Permit permit build
+      x-summary-source: derived
 components:
   schemas:
-    EvmPayload:
-      title: EvmPayload
+    ErrorBody:
+      title: ErrorBody
       type: object
+      description: 'Standard error response body. Every error response from this API
+
+        returns this shape.'
       properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: Stable machine-readable identifier for the failure mode.
+        message:
           type: string
-        data:
-          type: string
-        value:
-          type: string
-      required:
-      - chain
-      - chainId
-      - to
-      - data
-      - value
-    PermitBuildResponse:
-      title: PermitBuildResponse
-      type: object
-      properties:
+          description: Human-readable description of what went wrong. Safe to surface in UI.
         requestId:
-          type: string
-        payloads:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payload'
-        issues:
-          $ref: '#/components/schemas/PermitIssues'
-      required:
-      - requestId
-      - payloads
-    ProvidersParams:
-      title: ProvidersParams
-      type: object
-      properties:
-        include:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/Providers'
-        exclude:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Providers'
-    AmmSwapPermitOp:
-      title: AmmSwapPermitOp
-      type: object
-      description: Uniswap V3 `multicall([selfPermit, exactInputSingle])`. Signature split to v,r,s.
-      properties:
-        tokenIn:
-          type: string
-        tokenOut:
-          type: string
-        fee:
-          type: integer
-        recipient:
-          type: string
-        amountIn:
-          type: string
-        amountOutMinimum:
-          type: string
-        deadline:
-          type: string
+          description: 'Per-request correlation id (matches the `requestId` field in
+
+            server logs). Include this when filing support tickets.'
       required:
-      - tokenIn
-      - tokenOut
-      - fee
-      - recipient
-      - amountIn
-      - amountOutMinimum
-      - deadline
+      - code
+      - message
     LimitOrderPermitOp:
       title: LimitOrderPermitOp
       type: object
@@ -330,250 +279,26 @@ components:
       - solver
       - sender
       - deadline
-    SwapMethod:
-      title: SwapMethod
-      type: string
-      enum:
-      - swap
-      - swapInM
-      - swapOutM
-    Eip2612TypedData:
-      title: Eip2612TypedData
-      type: object
-      description: 'Directly signable EIP-712 payload. `types`/`primaryType` are the standard
-
-        EIP-2612 `Permit` definition and are omitted; clients use the canonical set.'
-      properties:
-        domain:
-          $ref: '#/components/schemas/Eip712Domain'
-        message:
-          $ref: '#/components/schemas/Eip2612Message'
-      required:
-      - domain
-      - message
-    TransactionPayload:
-      title: TransactionPayload
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - evm
-        - $ref: '#/components/schemas/EvmPayload'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - svm
-        - $ref: '#/components/schemas/SvmPayload'
-        required:
-        - type
-    BalanceIssue:
-      title: BalanceIssue
-      type: object
-      properties:
-        token:
-          type: string
-        actual:
-          type: string
-        expected:
-          type: string
-      required:
-      - token
-      - actual
-      - expected
-    PermitIssues:
-      title: PermitIssues
-      type: object
-      description: Soft warnings; their presence does not fail the request.
-      properties:
-        balance:
-          $ref: '#/components/schemas/BalanceIssue'
-          description: Present when `sender` does not hold `amountIn` of the input token.
-    SwapPermitOp:
-      title: SwapPermitOp
-      type: object
-      description: M Swap Facility `swap*WithPermit`.
-      properties:
-        method:
-          $ref: '#/components/schemas/SwapMethod'
-        extensionIn:
-          type:
-          - string
-          - 'null'
-        extensionOut:
-          type:
-          - string
-          - 'null'
-        amount:
-          type: string
-        recipient:
-          type: string
-        deadline:
-          type: string
-      required:
-      - method
-      - amount
-      - recipient
-      - deadline
-    SvmPayload:
-      title: SvmPayload
+    EvmPayload:
+      title: EvmPayload
       type: object
       properties:
         chain:
           $ref: '#/components/schemas/Chain'
-        transaction:
-          type: string
-          format: byte
-      required:
-      - chain
-      - transaction
-    PermitOperation:
-      title: PermitOperation
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - swap
-        - $ref: '#/components/schemas/SwapPermitOp'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - limitOrder
-        - $ref: '#/components/schemas/LimitOrderPermitOp'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - ammSwap
-        - $ref: '#/components/schemas/AmmSwapPermitOp'
-        required:
-        - type
-      description: 'Provider-specific static args for the `*WithPermit` call, discriminated
-
-        so the build step (or a self-encoding client) knows exactly what to build.'
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
-    PermitQuote:
-      title: PermitQuote
-      type: object
-      description: A quote whose approvals are satisfied by signing permits, not `approve`.
-      properties:
-        route:
-          $ref: '#/components/schemas/Route'
-        recipient:
-          type: string
-        amountIn:
-          type: string
-        amountOut:
-          type: string
-        minAmountOut:
-          type: string
-          description: 'Floor that must be met or the transaction reverts. Equals
-
-            `amountOut` for exact-output providers; below it for AMM legs
-
-            per `slippageBps`.'
-        estFillTime:
+        chainId:
           type: integer
-        expiresAt:
-          type: integer
-          description: 'Unix seconds after which this quote is no longer buildable — the
-
-            earliest permit `deadline` across its recipes. `/permit/build`
-
-            rejects with `PermitExpired` past this.'
-        recipes:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermitRecipe'
-          description: One per leg, in execution order.
-      required:
-      - route
-      - recipient
-      - amountIn
-      - amountOut
-      - minAmountOut
-      - estFillTime
-      - expiresAt
-      - recipes
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
+        to:
+          type: string
+        data:
+          type: string
+        value:
           type: string
       required:
       - chain
-      - address
-    ErrorBody:
-      title: ErrorBody
-      type: object
-      description: 'Standard error response body. Every error response from this API
-
-        returns this shape.'
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: Stable machine-readable identifier for the failure mode.
-        message:
-          type: string
-          description: Human-readable description of what went wrong. Safe to surface in UI.
-        requestId:
-          type:
-          - string
-          - 'null'
-          description: 'Per-request correlation id (matches the `requestId` field in
-
-            server logs). Include this when filing support tickets.'
-      required:
-      - code
-      - message
+      - chainId
+      - to
+      - data
+      - value
     ErrorCode:
       title: ErrorCode
       type: string
@@ -599,92 +324,6 @@ components:
         in the OpenAPI spec). Branch on this rather than on the HTTP status
 
         code — multiple errors may share a status as the API evolves.'
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
-    Eip2612Message:
-      title: Eip2612Message
-      type: object
-      properties:
-        owner:
-          type: string
-        spender:
-          type: string
-        value:
-          type: string
-        nonce:
-          type: string
-        deadline:
-          type: string
-      required:
-      - owner
-      - spender
-      - value
-      - nonce
-      - deadline
-    Eip712Domain:
-      title: Eip712Domain
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: string
-        chainId:
-          type: integer
-        verifyingContract:
-          type: string
-          description: The input token's address.
-      required:
-      - name
-      - version
-      - chainId
-      - verifyingContract
-    SignedPermitRecipe:
-      title: SignedPermitRecipe
-      type: object
-      properties:
-        recipe:
-          $ref: '#/components/schemas/PermitRecipe'
-          description: Echoed verbatim from `/permit/quote`.
-        signature:
-          type: string
-          description: 65-byte hex EIP-2612 permit signature. Build splits to v,r,s where the contract needs it.
-      required:
-      - recipe
-      - signature
-    Payload:
-      title: Payload
-      type: object
-      properties:
-        provider:
-          type: string
-        annotation:
-          type:
-          - string
-          - 'null'
-        data:
-          $ref: '#/components/schemas/TransactionPayload'
-        solver:
-          $ref: '#/components/schemas/PayloadSolver'
-          description: 'Present only on limit-order legs. Identifies the solver that produced
-
-            this leg, as reported to the server over gRPC.'
-      required:
-      - provider
-      - data
     PayloadSolver:
       title: PayloadSolver
       type: object
@@ -709,23 +348,6 @@ components:
       required:
       - address
       - exclusive
-    PermitQuoteResponse:
-      title: PermitQuoteResponse
-      type: object
-      properties:
-        requestId:
-          type: string
-          description: Per-request correlation id.
-        quotes:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermitQuote'
-        issues:
-          $ref: '#/components/schemas/PermitIssues'
-          description: Non-fatal findings shared across all quotes (e.g. insufficient balance).
-      required:
-      - requestId
-      - quotes
     PermitRecipe:
       title: PermitRecipe
       type: object
@@ -781,6 +403,43 @@ components:
       - typedData
       - operation
       - functionSignature
+    PermitBuildResponse:
+      title: PermitBuildResponse
+      type: object
+      properties:
+        requestId:
+          type: string
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payload'
+        issues:
+          $ref: '#/components/schemas/PermitIssues'
+      required:
+      - requestId
+      - payloads
+    Eip2612TypedData:
+      title: Eip2612TypedData
+      type: object
+      description: 'Directly signable EIP-712 payload. `types`/`primaryType` are the standard
+
+        EIP-2612 `Permit` definition and are omitted; clients use the canonical set.'
+      properties:
+        domain:
+          $ref: '#/components/schemas/Eip712Domain'
+        message:
+          $ref: '#/components/schemas/Eip2612Message'
+      required:
+      - domain
+      - message
+    PermitIssues:
+      title: PermitIssues
+      type: object
+      description: Soft warnings; their presence does not fail the request.
+      properties:
+        balance:
+          $ref: '#/components/schemas/BalanceIssue'
+          description: Present when `sender` does not hold `amountIn` of the input token.
     Route:
       title: Route
       type: object
@@ -792,6 +451,351 @@ components:
       required:
       - source
       - destination
+    PermitQuote:
+      title: PermitQuote
+      type: object
+      description: A quote whose approvals are satisfied by signing permits, not `approve`.
+      properties:
+        route:
+          $ref: '#/components/schemas/Route'
+        recipient:
+          type: string
+        amountIn:
+          type: string
+        amountOut:
+          type: string
+        minAmountOut:
+          type: string
+          description: 'Floor that must be met or the transaction reverts. Equals
+
+            `amountOut` for exact-output providers; below it for AMM legs
+
+            per `slippageBps`.'
+        estFillTime:
+          type: integer
+        expiresAt:
+          type: integer
+          description: 'Unix seconds after which this quote is no longer buildable — the
+
+            earliest permit `deadline` across its recipes. `/permit/build`
+
+            rejects with `PermitExpired` past this.'
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermitRecipe'
+          description: One per leg, in execution order.
+      required:
+      - route
+      - recipient
+      - amountIn
+      - amountOut
+      - minAmountOut
+      - estFillTime
+      - expiresAt
+      - recipes
+    ProvidersParams:
+      title: ProvidersParams
+      type: object
+      properties:
+        include:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Providers'
+        exclude:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Providers'
+    BalanceIssue:
+      title: BalanceIssue
+      type: object
+      properties:
+        token:
+          type: string
+        actual:
+          type: string
+        expected:
+          type: string
+      required:
+      - token
+      - actual
+      - expected
+    PermitOperation:
+      title: PermitOperation
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - swap
+        - $ref: '#/components/schemas/SwapPermitOp'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - limitOrder
+        - $ref: '#/components/schemas/LimitOrderPermitOp'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - ammSwap
+        - $ref: '#/components/schemas/AmmSwapPermitOp'
+        required:
+        - type
+      description: 'Provider-specific static args for the `*WithPermit` call, discriminated
+
+        so the build step (or a self-encoding client) knows exactly what to build.'
+    SwapPermitOp:
+      title: SwapPermitOp
+      type: object
+      description: M Swap Facility `swap*WithPermit`.
+      properties:
+        method:
+          $ref: '#/components/schemas/SwapMethod'
+        extensionIn:
+          type:
+          - string
+          - 'null'
+        extensionOut:
+          type:
+          - string
+          - 'null'
+        amount:
+          type: string
+        recipient:
+          type: string
+        deadline:
+          type: string
+      required:
+      - method
+      - amount
+      - recipient
+      - deadline
+    SwapMethod:
+      title: SwapMethod
+      type: string
+      enum:
+      - swap
+      - swapInM
+      - swapOutM
+    AmmSwapPermitOp:
+      title: AmmSwapPermitOp
+      type: object
+      description: Uniswap V3 `multicall([selfPermit, exactInputSingle])`. Signature split to v,r,s.
+      properties:
+        tokenIn:
+          type: string
+        tokenOut:
+          type: string
+        fee:
+          type: integer
+        recipient:
+          type: string
+        amountIn:
+          type: string
+        amountOutMinimum:
+          type: string
+        deadline:
+          type: string
+      required:
+      - tokenIn
+      - tokenOut
+      - fee
+      - recipient
+      - amountIn
+      - amountOutMinimum
+      - deadline
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
+    PermitQuoteResponse:
+      title: PermitQuoteResponse
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Per-request correlation id.
+        quotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermitQuote'
+        issues:
+          $ref: '#/components/schemas/PermitIssues'
+          description: Non-fatal findings shared across all quotes (e.g. insufficient balance).
+      required:
+      - requestId
+      - quotes
+    SvmPayload:
+      title: SvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
+          type: string
+          format: byte
+      required:
+      - chain
+      - transaction
+    SignedPermitRecipe:
+      title: SignedPermitRecipe
+      type: object
+      properties:
+        recipe:
+          $ref: '#/components/schemas/PermitRecipe'
+          description: Echoed verbatim from `/permit/quote`.
+        signature:
+          type: string
+          description: 65-byte hex EIP-2612 permit signature. Build splits to v,r,s where the contract needs it.
+      required:
+      - recipe
+      - signature
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
+    Eip712Domain:
+      title: Eip712Domain
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        chainId:
+          type: integer
+        verifyingContract:
+          type: string
+          description: The input token's address.
+      required:
+      - name
+      - version
+      - chainId
+      - verifyingContract
+    Payload:
+      title: Payload
+      type: object
+      properties:
+        provider:
+          type: string
+        annotation:
+          type:
+          - string
+          - 'null'
+        data:
+          $ref: '#/components/schemas/TransactionPayload'
+        solver:
+          $ref: '#/components/schemas/PayloadSolver'
+          description: 'Present only on limit-order legs. Identifies the solver that produced
+
+            this leg, as reported to the server over gRPC.'
+      required:
+      - provider
+      - data
+    AssetAddress:
+      title: AssetAddress
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        address:
+          type: string
+      required:
+      - chain
+      - address
+    Eip2612Message:
+      title: Eip2612Message
+      type: object
+      properties:
+        owner:
+          type: string
+        spender:
+          type: string
+        value:
+          type: string
+        nonce:
+          type: string
+        deadline:
+          type: string
+      required:
+      - owner
+      - spender
+      - value
+      - nonce
+      - deadline
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

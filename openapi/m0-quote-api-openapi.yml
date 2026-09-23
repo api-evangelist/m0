@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
-  title: liquidity-api Order Quote API
-  version: '1.0'
+  title: liquidity-api Quote API
+  version: ''
   description: This API provides quotes for moving and converting between M extensions and other stablecoins
 servers:
 - url: https://gateway.m0.xyz/v1/orchestration
@@ -50,15 +50,15 @@ paths:
         in server logs; include it when filing a support ticket.
 
 
-        | Status | `code`               | When                                                                                      |
+        | Status | `code` | When |
 
         | ------ | -------------------- | ----------------------------------------------------------------------------------------- |
 
-        | 400    | `BadQuoteRequest`    | Missing/invalid fields, `source` == `destination`, both `include` and `exclude` set, or an unknown asset. |
+        | 400 | `BadQuoteRequest` | Missing/invalid fields, `source` == `destination`, both `include` and `exclude` set, or an unknown asset. |
 
-        | 404    | `NoQuotesAvailable`  | Structurally valid, but no provider could quote this route + amount.                       |
+        | 404 | `NoQuotesAvailable` | Structurally valid, but no provider could quote this route + amount. |
 
-        | 500    | `QuoteError`         | Unexpected internal failure while computing or simulating quotes; may succeed on retry.   |'
+        | 500 | `QuoteError` | Unexpected internal failure while computing or simulating quotes; may succeed on retry. |'
       operationId: quote_quote
       tags:
       - Quote
@@ -132,6 +132,8 @@ paths:
               - route
               - amountIn
               - sender
+      summary: Quote quote
+      x-summary-source: derived
   /supported-assets:
     get:
       description: Get all assets supported for quotes
@@ -150,8 +152,27 @@ paths:
                   $ref: '#/components/schemas/Asset'
       security:
       - ApiKeyAuth: []
+      summary: Quote get supported assets
+      x-summary-source: derived
 components:
   schemas:
+    ChainRuntime:
+      title: ChainRuntime
+      type: string
+      enum:
+      - evm
+      - svm
+    Route:
+      title: Route
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AssetAddress'
+        destination:
+          $ref: '#/components/schemas/AssetAddress'
+      required:
+      - source
+      - destination
     ErrorBody:
       title: ErrorBody
       type: object
@@ -175,78 +196,17 @@ components:
       required:
       - code
       - message
-    ErrorCode:
-      title: ErrorCode
-      type: string
-      enum:
-      - QuoteError
-      - BadQuoteRequest
-      - NoQuotesAvailable
-      - BadOrderRequest
-      - OrderNotFound
-      - OrderNotCancellable
-      - CancelOrderError
-      - BadTopologyRequest
-      - BadPermitRequest
-      - PermitNotSupported
-      - PermitExpired
-      - InvalidPermitSignature
-      - PermitQuoteError
-      - PermitBuildError
-      description: 'Stable machine-readable identifier for an API error. Each value
-
-        corresponds 1:1 to an error type (and to one `responses` entry
-
-        in the OpenAPI spec). Branch on this rather than on the HTTP status
-
-        code — multiple errors may share a status as the API evolves.'
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
-    SvmPayload:
-      title: SvmPayload
+    AssetAddress:
+      title: AssetAddress
       type: object
       properties:
         chain:
           $ref: '#/components/schemas/Chain'
-        transaction:
-          type: string
-          format: byte
-      required:
-      - chain
-      - transaction
-    EvmPayload:
-      title: EvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
-          type: string
-        data:
-          type: string
-        value:
+        address:
           type: string
       required:
       - chain
-      - chainId
-      - to
-      - data
-      - value
+      - address
     Chain:
       title: Chain
       type: string
@@ -269,128 +229,6 @@ components:
       - Fluent
       - Moca
       - Rise
-    Quote:
-      title: Quote
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/Route'
-        recipient:
-          type: string
-        amountIn:
-          type: string
-        amountOut:
-          type: string
-        estFillTime:
-          type: integer
-        payloads:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payload'
-      required:
-      - route
-      - recipient
-      - amountIn
-      - amountOut
-      - estFillTime
-      - payloads
-    Route:
-      title: Route
-      type: object
-      properties:
-        source:
-          $ref: '#/components/schemas/AssetAddress'
-        destination:
-          $ref: '#/components/schemas/AssetAddress'
-      required:
-      - source
-      - destination
-    Payload:
-      title: Payload
-      type: object
-      properties:
-        provider:
-          type: string
-        annotation:
-          type:
-          - string
-          - 'null'
-        data:
-          $ref: '#/components/schemas/TransactionPayload'
-        solver:
-          $ref: '#/components/schemas/PayloadSolver'
-          description: 'Present only on limit-order legs. Identifies the solver that produced
-
-            this leg, as reported to the server over gRPC.'
-      required:
-      - provider
-      - data
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
-          type: string
-      required:
-      - chain
-      - address
-    PayloadSolver:
-      title: PayloadSolver
-      type: object
-      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
-
-        this solver on-chain (it becomes the order''s `designatedSolver`); when
-
-        false, the quote reflects this solver''s price but any solver may fill.'
-      properties:
-        address:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        exclusive:
-          type: boolean
-        feeBps:
-          type:
-          - integer
-          - 'null'
-      required:
-      - address
-      - exclusive
-    TransactionPayload:
-      title: TransactionPayload
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - evm
-        - $ref: '#/components/schemas/EvmPayload'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - svm
-        - $ref: '#/components/schemas/SvmPayload'
-        required:
-        - type
-    ChainRuntime:
-      title: ChainRuntime
-      type: string
-      enum:
-      - evm
-      - svm
     Asset:
       title: Asset
       type: object
@@ -420,6 +258,172 @@ components:
       - symbol
       - name
       - m0Extension
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
+    Quote:
+      title: Quote
+      type: object
+      properties:
+        route:
+          $ref: '#/components/schemas/Route'
+        recipient:
+          type: string
+        amountIn:
+          type: string
+        amountOut:
+          type: string
+        estFillTime:
+          type: integer
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payload'
+      required:
+      - route
+      - recipient
+      - amountIn
+      - amountOut
+      - estFillTime
+      - payloads
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
+    EvmPayload:
+      title: EvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
+          type: integer
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
+      required:
+      - chain
+      - chainId
+      - to
+      - data
+      - value
+    ErrorCode:
+      title: ErrorCode
+      type: string
+      enum:
+      - QuoteError
+      - BadQuoteRequest
+      - NoQuotesAvailable
+      - BadOrderRequest
+      - OrderNotFound
+      - OrderNotCancellable
+      - CancelOrderError
+      - BadTopologyRequest
+      - BadPermitRequest
+      - PermitNotSupported
+      - PermitExpired
+      - InvalidPermitSignature
+      - PermitQuoteError
+      - PermitBuildError
+      description: 'Stable machine-readable identifier for an API error. Each value
+
+        corresponds 1:1 to an error type (and to one `responses` entry
+
+        in the OpenAPI spec). Branch on this rather than on the HTTP status
+
+        code — multiple errors may share a status as the API evolves.'
+    Payload:
+      title: Payload
+      type: object
+      properties:
+        provider:
+          type: string
+        annotation:
+          type:
+          - string
+          - 'null'
+        data:
+          $ref: '#/components/schemas/TransactionPayload'
+        solver:
+          $ref: '#/components/schemas/PayloadSolver'
+          description: 'Present only on limit-order legs. Identifies the solver that produced
+
+            this leg, as reported to the server over gRPC.'
+      required:
+      - provider
+      - data
+    PayloadSolver:
+      title: PayloadSolver
+      type: object
+      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
+
+        this solver on-chain (it becomes the order''s `designatedSolver`); when
+
+        false, the quote reflects this solver''s price but any solver may fill.'
+      properties:
+        address:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        exclusive:
+          type: boolean
+        feeBps:
+          type:
+          - integer
+          - 'null'
+      required:
+      - address
+      - exclusive
+    SvmPayload:
+      title: SvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
+          type: string
+          format: byte
+      required:
+      - chain
+      - transaction
     ProvidersParams:
       title: ProvidersParams
       type: object

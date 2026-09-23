@@ -1,10 +1,7 @@
 {
   "provider": "m0",
   "sources": [
-    "m0-order-api-openapi.yml",
-    "m0-permit-api-openapi.yml",
-    "m0-quote-api-openapi.yml",
-    "m0-topology-api-openapi.yml"
+    "_original/m0-orchestration-openapi-original.json"
   ],
   "outputs": [
     "m0-order-api-openapi.yml",
@@ -14,13 +11,22 @@
   ],
   "archived": [],
   "errors": [],
-  "warnings": [],
+  "warnings": [
+    "m0-orchestration-openapi-original.json: info.version missing"
+  ],
   "notes": [
-    "m0-order-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "m0-permit-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "m0-quote-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
-    "m0-topology-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "m0-orchestration-openapi-original.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "m0-orchestration-openapi-original.json: declared missing tag: Order",
+    "m0-orchestration-openapi-original.json: declared missing tag: Permit",
+    "m0-orchestration-openapi-original.json: declared missing tag: Quote",
+    "m0-orchestration-openapi-original.json: declared missing tag: Topology",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "m0-order-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "m0-permit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "m0-quote-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "m0-topology-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
