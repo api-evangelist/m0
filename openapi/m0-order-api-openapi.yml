@@ -295,181 +295,6 @@ components:
       required:
       - code
       - message
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
-    CancelOrderParams:
-      title: CancelOrderParams
-      type: object
-      description: Optional body for the cancel endpoint.
-      properties:
-        caller:
-          type:
-          - string
-          - 'null'
-    Fill:
-      title: Fill
-      type: object
-      description: 'A single fill event recorded by the indexer for an order. An order may
-
-        have multiple fills when filled by multiple solvers or in multiple
-
-        transactions; ordered chronologically.'
-      properties:
-        filledAt:
-          type: integer
-        chainId:
-          type: integer
-        transactionHash:
-          type: string
-        solver:
-          type: string
-        amountInToRelease:
-          type: string
-        amountOutFilled:
-          type: string
-      required:
-      - filledAt
-      - chainId
-      - transactionHash
-      - solver
-      - amountInToRelease
-      - amountOutFilled
-    TransactionPayload:
-      title: TransactionPayload
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - evm
-        - $ref: '#/components/schemas/EvmPayload'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - svm
-        - $ref: '#/components/schemas/SvmPayload'
-        required:
-        - type
-    OrderSummary:
-      title: OrderSummary
-      type: object
-      description: 'Compact order shape returned by the list endpoint. Sourced from the
-
-        indexer-fed DB, so on-chain-only fields (nonce, recipient, version) are
-
-        not included. Use getOrder for the full resource.'
-      properties:
-        orderId:
-          type: string
-        createdAt:
-          type: integer
-        originChainId:
-          type: integer
-        sender:
-          type: string
-        tokenIn:
-          type: string
-        amountIn:
-          type: string
-        destChainId:
-          type: integer
-        tokenOut:
-          type: string
-        amountOut:
-          type: string
-        designatedSolver:
-          type: string
-        openTx:
-          type: string
-        amountOutFilled:
-          type: string
-        fillCount:
-          type: integer
-        amountInReleased:
-          type: string
-        fillReportCount:
-          type: integer
-        amountRefunded:
-          type: string
-        status:
-          $ref: '#/components/schemas/OrderStatus'
-        fillDeadline:
-          type: integer
-        funder:
-          type: string
-        resolvedAt:
-          type:
-          - integer
-          - 'null'
-      required:
-      - orderId
-      - createdAt
-      - originChainId
-      - sender
-      - tokenIn
-      - amountIn
-      - destChainId
-      - tokenOut
-      - amountOut
-      - designatedSolver
-      - openTx
-      - amountOutFilled
-      - fillCount
-      - amountInReleased
-      - fillReportCount
-      - amountRefunded
-      - status
-      - fillDeadline
-      - funder
-    EvmPayload:
-      title: EvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
-          type: string
-        data:
-          type: string
-        value:
-          type: string
-      required:
-      - chain
-      - chainId
-      - to
-      - data
-      - value
     OrdersResponse:
       title: OrdersResponse
       type: object
@@ -514,18 +339,90 @@ components:
         in the OpenAPI spec). Branch on this rather than on the HTTP status
 
         code — multiple errors may share a status as the API evolves.'
-    SvmPayload:
-      title: SvmPayload
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    Fill:
+      title: Fill
       type: object
+      description: 'A single fill event recorded by the indexer for an order. An order may
+
+        have multiple fills when filled by multiple solvers or in multiple
+
+        transactions; ordered chronologically.'
       properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        transaction:
+        filledAt:
+          type: integer
+        chainId:
+          type: integer
+        transactionHash:
           type: string
-          format: byte
+        solver:
+          type: string
+        amountInToRelease:
+          type: string
+        amountOutFilled:
+          type: string
       required:
-      - chain
-      - transaction
+      - filledAt
+      - chainId
+      - transactionHash
+      - solver
+      - amountInToRelease
+      - amountOutFilled
+    CancelOrderParams:
+      title: CancelOrderParams
+      type: object
+      description: Optional body for the cancel endpoint.
+      properties:
+        caller:
+          type:
+          - string
+          - 'null'
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
     Order:
       title: Order
       type: object
@@ -617,6 +514,109 @@ components:
       - amountInReleased
       - amountRefunded
       - funder
+    SvmPayload:
+      title: SvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
+          type: string
+          format: byte
+      required:
+      - chain
+      - transaction
+    OrderSummary:
+      title: OrderSummary
+      type: object
+      description: 'Compact order shape returned by the list endpoint. Sourced from the
+
+        indexer-fed DB, so on-chain-only fields (nonce, recipient, version) are
+
+        not included. Use getOrder for the full resource.'
+      properties:
+        orderId:
+          type: string
+        createdAt:
+          type: integer
+        originChainId:
+          type: integer
+        sender:
+          type: string
+        tokenIn:
+          type: string
+        amountIn:
+          type: string
+        destChainId:
+          type: integer
+        tokenOut:
+          type: string
+        amountOut:
+          type: string
+        designatedSolver:
+          type: string
+        openTx:
+          type: string
+        amountOutFilled:
+          type: string
+        fillCount:
+          type: integer
+        amountInReleased:
+          type: string
+        fillReportCount:
+          type: integer
+        amountRefunded:
+          type: string
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        fillDeadline:
+          type: integer
+        funder:
+          type: string
+        resolvedAt:
+          type:
+          - integer
+          - 'null'
+      required:
+      - orderId
+      - createdAt
+      - originChainId
+      - sender
+      - tokenIn
+      - amountIn
+      - destChainId
+      - tokenOut
+      - amountOut
+      - designatedSolver
+      - openTx
+      - amountOutFilled
+      - fillCount
+      - amountInReleased
+      - fillReportCount
+      - amountRefunded
+      - status
+      - fillDeadline
+      - funder
+    EvmPayload:
+      title: EvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
+          type: integer
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
+      required:
+      - chain
+      - chainId
+      - to
+      - data
+      - value
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

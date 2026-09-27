@@ -94,6 +94,22 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    TopologyRouteProvider:
+      title: TopologyRouteProvider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Providers'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        quoteCount:
+          type: integer
+      required:
+      - provider
+      - quoteCount
     ErrorBody:
       title: ErrorBody
       type: object
@@ -117,6 +133,99 @@ components:
       required:
       - code
       - message
+    ErrorCode:
+      title: ErrorCode
+      type: string
+      enum:
+      - QuoteError
+      - BadQuoteRequest
+      - NoQuotesAvailable
+      - BadOrderRequest
+      - OrderNotFound
+      - OrderNotCancellable
+      - CancelOrderError
+      - BadTopologyRequest
+      - BadPermitRequest
+      - PermitNotSupported
+      - PermitExpired
+      - InvalidPermitSignature
+      - PermitQuoteError
+      - PermitBuildError
+      description: 'Stable machine-readable identifier for an API error. Each value
+
+        corresponds 1:1 to an error type (and to one `responses` entry
+
+        in the OpenAPI spec). Branch on this rather than on the HTTP status
+
+        code — multiple errors may share a status as the API evolves.'
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    AssetAddress:
+      title: AssetAddress
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        address:
+          type: string
+      required:
+      - chain
+      - address
+    AddressFrequency:
+      title: AddressFrequency
+      type: object
+      properties:
+        address:
+          type: string
+        count:
+          type: integer
+      required:
+      - address
+      - count
+    TopologyRoute:
+      title: TopologyRoute
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AssetAddress'
+        destination:
+          $ref: '#/components/schemas/AssetAddress'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopologyRouteProvider'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        totalQuoteCount:
+          type: integer
+      required:
+      - source
+      - destination
+      - providers
+      - totalQuoteCount
     TopologyRouteStats:
       title: TopologyRouteStats
       type: object
@@ -153,63 +262,6 @@ components:
       - hottestPaths
       - topSenders
       - topRecipients
-    TopologyRoute:
-      title: TopologyRoute
-      type: object
-      properties:
-        source:
-          $ref: '#/components/schemas/AssetAddress'
-        destination:
-          $ref: '#/components/schemas/AssetAddress'
-        providers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TopologyRouteProvider'
-        lastUsed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        totalQuoteCount:
-          type: integer
-      required:
-      - source
-      - destination
-      - providers
-      - totalQuoteCount
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
-    AddressFrequency:
-      title: AddressFrequency
-      type: object
-      properties:
-        address:
-          type: string
-        count:
-          type: integer
-      required:
-      - address
-      - count
     Providers:
       title: Providers
       type: string
@@ -225,58 +277,6 @@ components:
       - kyber-swap
       - limit-order
       - uniswap-v3
-    ErrorCode:
-      title: ErrorCode
-      type: string
-      enum:
-      - QuoteError
-      - BadQuoteRequest
-      - NoQuotesAvailable
-      - BadOrderRequest
-      - OrderNotFound
-      - OrderNotCancellable
-      - CancelOrderError
-      - BadTopologyRequest
-      - BadPermitRequest
-      - PermitNotSupported
-      - PermitExpired
-      - InvalidPermitSignature
-      - PermitQuoteError
-      - PermitBuildError
-      description: 'Stable machine-readable identifier for an API error. Each value
-
-        corresponds 1:1 to an error type (and to one `responses` entry
-
-        in the OpenAPI spec). Branch on this rather than on the HTTP status
-
-        code — multiple errors may share a status as the API evolves.'
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
-          type: string
-      required:
-      - chain
-      - address
-    TopologyRouteProvider:
-      title: TopologyRouteProvider
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Providers'
-        lastUsed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        quoteCount:
-          type: integer
-      required:
-      - provider
-      - quoteCount
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
