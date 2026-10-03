@@ -110,29 +110,6 @@ components:
       required:
       - provider
       - quoteCount
-    ErrorBody:
-      title: ErrorBody
-      type: object
-      description: 'Standard error response body. Every error response from this API
-
-        returns this shape.'
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: Stable machine-readable identifier for the failure mode.
-        message:
-          type: string
-          description: Human-readable description of what went wrong. Safe to surface in UI.
-        requestId:
-          type:
-          - string
-          - 'null'
-          description: 'Per-request correlation id (matches the `requestId` field in
-
-            server logs). Include this when filing support tickets.'
-      required:
-      - code
-      - message
     ErrorCode:
       title: ErrorCode
       type: string
@@ -191,41 +168,6 @@ components:
       required:
       - chain
       - address
-    AddressFrequency:
-      title: AddressFrequency
-      type: object
-      properties:
-        address:
-          type: string
-        count:
-          type: integer
-      required:
-      - address
-      - count
-    TopologyRoute:
-      title: TopologyRoute
-      type: object
-      properties:
-        source:
-          $ref: '#/components/schemas/AssetAddress'
-        destination:
-          $ref: '#/components/schemas/AssetAddress'
-        providers:
-          type: array
-          items:
-            $ref: '#/components/schemas/TopologyRouteProvider'
-        lastUsed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        totalQuoteCount:
-          type: integer
-      required:
-      - source
-      - destination
-      - providers
-      - totalQuoteCount
     TopologyRouteStats:
       title: TopologyRouteStats
       type: object
@@ -262,6 +204,41 @@ components:
       - hottestPaths
       - topSenders
       - topRecipients
+    AddressFrequency:
+      title: AddressFrequency
+      type: object
+      properties:
+        address:
+          type: string
+        count:
+          type: integer
+      required:
+      - address
+      - count
+    TopologyRoute:
+      title: TopologyRoute
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AssetAddress'
+        destination:
+          $ref: '#/components/schemas/AssetAddress'
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/TopologyRouteProvider'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        totalQuoteCount:
+          type: integer
+      required:
+      - source
+      - destination
+      - providers
+      - totalQuoteCount
     Providers:
       title: Providers
       type: string
@@ -277,6 +254,29 @@ components:
       - kyber-swap
       - limit-order
       - uniswap-v3
+    ErrorBody:
+      title: ErrorBody
+      type: object
+      description: 'Standard error response body. Every error response from this API
+
+        returns this shape.'
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: Stable machine-readable identifier for the failure mode.
+        message:
+          type: string
+          description: Human-readable description of what went wrong. Safe to surface in UI.
+        requestId:
+          type:
+          - string
+          - 'null'
+          description: 'Per-request correlation id (matches the `requestId` field in
+
+            server logs). Include this when filing support tickets.'
+      required:
+      - code
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
