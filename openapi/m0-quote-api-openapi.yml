@@ -156,82 +156,80 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    Quote:
-      title: Quote
+    EvmPayload:
+      title: EvmPayload
       type: object
       properties:
-        route:
-          $ref: '#/components/schemas/Route'
-        recipient:
-          type: string
-        amountIn:
-          type: string
-        amountOut:
-          type: string
-        estFillTime:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
           type: integer
-        payloads:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payload'
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
       required:
-      - route
-      - recipient
-      - amountIn
-      - amountOut
-      - estFillTime
-      - payloads
-    TransactionPayload:
-      title: TransactionPayload
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - evm
-        - $ref: '#/components/schemas/EvmPayload'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - svm
-        - $ref: '#/components/schemas/SvmPayload'
-        required:
-        - type
-    Payload:
-      title: Payload
+      - chain
+      - chainId
+      - to
+      - data
+      - value
+    SvmPayload:
+      title: SvmPayload
       type: object
       properties:
-        provider:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
           type: string
-        annotation:
-          type:
-          - string
-          - 'null'
-        data:
-          $ref: '#/components/schemas/TransactionPayload'
-        solver:
-          $ref: '#/components/schemas/PayloadSolver'
-          description: 'Present only on limit-order legs. Identifies the solver that produced
-
-            this leg, as reported to the server over gRPC.'
+          format: byte
       required:
-      - provider
-      - data
-    ChainRuntime:
-      title: ChainRuntime
+      - chain
+      - transaction
+    Route:
+      title: Route
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AssetAddress'
+        destination:
+          $ref: '#/components/schemas/AssetAddress'
+      required:
+      - source
+      - destination
+    ProvidersParams:
+      title: ProvidersParams
+      type: object
+      properties:
+        include:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Providers'
+        exclude:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/Providers'
+    Providers:
+      title: Providers
       type: string
       enum:
-      - evm
-      - svm
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
     Asset:
       title: Asset
       type: object
@@ -261,17 +259,92 @@ components:
       - symbol
       - name
       - m0Extension
-    Route:
-      title: Route
+    PayloadSolver:
+      title: PayloadSolver
+      type: object
+      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
+
+        this solver on-chain (it becomes the order''s `designatedSolver`); when
+
+        false, the quote reflects this solver''s price but any solver may fill.'
+      properties:
+        address:
+          type: string
+        name:
+          type:
+          - string
+          - 'null'
+        exclusive:
+          type: boolean
+        feeBps:
+          type:
+          - integer
+          - 'null'
+      required:
+      - address
+      - exclusive
+    Quote:
+      title: Quote
       type: object
       properties:
-        source:
-          $ref: '#/components/schemas/AssetAddress'
-        destination:
-          $ref: '#/components/schemas/AssetAddress'
+        route:
+          $ref: '#/components/schemas/Route'
+        recipient:
+          type: string
+        amountIn:
+          type: string
+        amountOut:
+          type: string
+        estFillTime:
+          type: integer
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payload'
       required:
-      - source
-      - destination
+      - route
+      - recipient
+      - amountIn
+      - amountOut
+      - estFillTime
+      - payloads
+    AssetAddress:
+      title: AssetAddress
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        address:
+          type: string
+      required:
+      - chain
+      - address
+    Payload:
+      title: Payload
+      type: object
+      properties:
+        provider:
+          type: string
+        annotation:
+          type:
+          - string
+          - 'null'
+        data:
+          $ref: '#/components/schemas/TransactionPayload'
+        solver:
+          $ref: '#/components/schemas/PayloadSolver'
+          description: 'Present only on limit-order legs. Identifies the solver that produced
+
+            this leg, as reported to the server over gRPC.'
+      required:
+      - provider
+      - data
+    ChainRuntime:
+      title: ChainRuntime
+      type: string
+      enum:
+      - evm
+      - svm
     ErrorCode:
       title: ErrorCode
       type: string
@@ -319,84 +392,31 @@ components:
       - Fluent
       - Moca
       - Rise
-    PayloadSolver:
-      title: PayloadSolver
-      type: object
-      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
-
-        this solver on-chain (it becomes the order''s `designatedSolver`); when
-
-        false, the quote reflects this solver''s price but any solver may fill.'
-      properties:
-        address:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        exclusive:
-          type: boolean
-        feeBps:
-          type:
-          - integer
-          - 'null'
-      required:
-      - address
-      - exclusive
-    ProvidersParams:
-      title: ProvidersParams
-      type: object
-      properties:
-        include:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Providers'
-        exclude:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/Providers'
-    SvmPayload:
-      title: SvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        transaction:
-          type: string
-          format: byte
-      required:
-      - chain
-      - transaction
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
-          type: string
-      required:
-      - chain
-      - address
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
     ErrorBody:
       title: ErrorBody
       type: object
@@ -420,26 +440,6 @@ components:
       required:
       - code
       - message
-    EvmPayload:
-      title: EvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
-          type: string
-        data:
-          type: string
-        value:
-          type: string
-      required:
-      - chain
-      - chainId
-      - to
-      - data
-      - value
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
