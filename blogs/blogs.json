@@ -2,6 +2,20 @@
   "repo": "m0",
   "feeds": [
     {
+      "source": "https://www.m0.org/newsroom",
+      "feed_url": "https://www.m0.org/newsroom",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://research.m0.org",
+      "feed_url": "https://research.m0.org",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
       "source": "https://docs.m0.org/get-started/how-it-works",
       "feed_url": "https://docs.m0.org/get-started/how-it-works",
       "title": "",
@@ -10,5 +24,5 @@
     }
   ],
   "post_count": 0,
-  "fetched": "2026-10-03T12:30:02Z"
+  "fetched": "2026-10-10T13:15:00Z"
 }
