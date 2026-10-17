@@ -156,38 +156,51 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EvmPayload:
-      title: EvmPayload
+    Payload:
+      title: Payload
       type: object
       properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
+        provider:
           type: string
+        annotation:
+          type:
+          - string
+          - 'null'
         data:
-          type: string
-        value:
-          type: string
+          $ref: '#/components/schemas/TransactionPayload'
+        solver:
+          $ref: '#/components/schemas/PayloadSolver'
+          description: 'Present only on limit-order legs. Identifies the solver that produced
+
+            this leg, as reported to the server over gRPC.'
       required:
-      - chain
-      - chainId
-      - to
+      - provider
       - data
-      - value
-    SvmPayload:
-      title: SvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        transaction:
-          type: string
-          format: byte
-      required:
-      - chain
-      - transaction
+    TransactionPayload:
+      title: TransactionPayload
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - evm
+        - $ref: '#/components/schemas/EvmPayload'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - svm
+        - $ref: '#/components/schemas/SvmPayload'
+        required:
+        - type
     Route:
       title: Route
       type: object
@@ -215,21 +228,6 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/Providers'
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
     Asset:
       title: Asset
       type: object
@@ -259,55 +257,6 @@ components:
       - symbol
       - name
       - m0Extension
-    PayloadSolver:
-      title: PayloadSolver
-      type: object
-      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
-
-        this solver on-chain (it becomes the order''s `designatedSolver`); when
-
-        false, the quote reflects this solver''s price but any solver may fill.'
-      properties:
-        address:
-          type: string
-        name:
-          type:
-          - string
-          - 'null'
-        exclusive:
-          type: boolean
-        feeBps:
-          type:
-          - integer
-          - 'null'
-      required:
-      - address
-      - exclusive
-    Quote:
-      title: Quote
-      type: object
-      properties:
-        route:
-          $ref: '#/components/schemas/Route'
-        recipient:
-          type: string
-        amountIn:
-          type: string
-        amountOut:
-          type: string
-        estFillTime:
-          type: integer
-        payloads:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payload'
-      required:
-      - route
-      - recipient
-      - amountIn
-      - amountOut
-      - estFillTime
-      - payloads
     AssetAddress:
       title: AssetAddress
       type: object
@@ -319,32 +268,92 @@ components:
       required:
       - chain
       - address
-    Payload:
-      title: Payload
-      type: object
-      properties:
-        provider:
-          type: string
-        annotation:
-          type:
-          - string
-          - 'null'
-        data:
-          $ref: '#/components/schemas/TransactionPayload'
-        solver:
-          $ref: '#/components/schemas/PayloadSolver'
-          description: 'Present only on limit-order legs. Identifies the solver that produced
-
-            this leg, as reported to the server over gRPC.'
-      required:
-      - provider
-      - data
     ChainRuntime:
       title: ChainRuntime
       type: string
       enum:
       - evm
       - svm
+    Chain:
+      title: Chain
+      type: string
+      enum:
+      - Ethereum
+      - Solana
+      - Arbitrum
+      - Base
+      - Linea
+      - Sepolia
+      - BaseSepolia
+      - ArbitrumSepolia
+      - HyperEVM
+      - BinanceSmartChain
+      - Mantra
+      - Plasma
+      - SolanaDevnet
+      - Soneium
+      - Citrea
+      - Fluent
+      - Moca
+      - Rise
+    EvmPayload:
+      title: EvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
+          type: integer
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
+      required:
+      - chain
+      - chainId
+      - to
+      - data
+      - value
+    ErrorBody:
+      title: ErrorBody
+      type: object
+      description: 'Standard error response body. Every error response from this API
+
+        returns this shape.'
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: Stable machine-readable identifier for the failure mode.
+        message:
+          type: string
+          description: Human-readable description of what went wrong. Safe to surface in UI.
+        requestId:
+          type:
+          - string
+          - 'null'
+          description: 'Per-request correlation id (matches the `requestId` field in
+
+            server logs). Include this when filing support tickets.'
+      required:
+      - code
+      - message
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
     ErrorCode:
       title: ErrorCode
       type: string
@@ -370,76 +379,67 @@ components:
         in the OpenAPI spec). Branch on this rather than on the HTTP status
 
         code — multiple errors may share a status as the API evolves.'
-    Chain:
-      title: Chain
-      type: string
-      enum:
-      - Ethereum
-      - Solana
-      - Arbitrum
-      - Base
-      - Linea
-      - Sepolia
-      - BaseSepolia
-      - ArbitrumSepolia
-      - HyperEVM
-      - BinanceSmartChain
-      - Mantra
-      - Plasma
-      - SolanaDevnet
-      - Soneium
-      - Citrea
-      - Fluent
-      - Moca
-      - Rise
-    TransactionPayload:
-      title: TransactionPayload
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - evm
-        - $ref: '#/components/schemas/EvmPayload'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - svm
-        - $ref: '#/components/schemas/SvmPayload'
-        required:
-        - type
-    ErrorBody:
-      title: ErrorBody
+    PayloadSolver:
+      title: PayloadSolver
       type: object
-      description: 'Standard error response body. Every error response from this API
+      description: 'The solver behind a limit-order leg. `exclusive` means the leg is bound to
 
-        returns this shape.'
+        this solver on-chain (it becomes the order''s `designatedSolver`); when
+
+        false, the quote reflects this solver''s price but any solver may fill.'
       properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: Stable machine-readable identifier for the failure mode.
-        message:
+        address:
           type: string
-          description: Human-readable description of what went wrong. Safe to surface in UI.
-        requestId:
+        name:
           type:
           - string
           - 'null'
-          description: 'Per-request correlation id (matches the `requestId` field in
-
-            server logs). Include this when filing support tickets.'
+        exclusive:
+          type: boolean
+        feeBps:
+          type:
+          - integer
+          - 'null'
       required:
-      - code
-      - message
+      - address
+      - exclusive
+    SvmPayload:
+      title: SvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
+          type: string
+          format: byte
+      required:
+      - chain
+      - transaction
+    Quote:
+      title: Quote
+      type: object
+      properties:
+        route:
+          $ref: '#/components/schemas/Route'
+        recipient:
+          type: string
+        amountIn:
+          type: string
+        amountOut:
+          type: string
+        estFillTime:
+          type: integer
+        payloads:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payload'
+      required:
+      - route
+      - recipient
+      - amountIn
+      - amountOut
+      - estFillTime
+      - payloads
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

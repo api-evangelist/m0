@@ -265,89 +265,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    EvmPayload:
-      title: EvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        chainId:
-          type: integer
-        to:
-          type: string
-        data:
-          type: string
-        value:
-          type: string
-      required:
-      - chain
-      - chainId
-      - to
-      - data
-      - value
-    OrdersResponse:
-      title: OrdersResponse
-      type: object
-      properties:
-        orders:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrderSummary'
-        total:
-          type: integer
-        limit:
-          type: integer
-        offset:
-          type: integer
-      required:
-      - orders
-      - total
-      - limit
-      - offset
-    SvmPayload:
-      title: SvmPayload
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        transaction:
-          type: string
-          format: byte
-      required:
-      - chain
-      - transaction
-    OrderStatus:
-      title: OrderStatus
-      type: string
-      enum:
-      - CREATED
-      - COMPLETED
-      - CANCELLED
-    ErrorCode:
-      title: ErrorCode
-      type: string
-      enum:
-      - QuoteError
-      - BadQuoteRequest
-      - NoQuotesAvailable
-      - BadOrderRequest
-      - OrderNotFound
-      - OrderNotCancellable
-      - CancelOrderError
-      - BadTopologyRequest
-      - BadPermitRequest
-      - PermitNotSupported
-      - PermitExpired
-      - InvalidPermitSignature
-      - PermitQuoteError
-      - PermitBuildError
-      description: 'Stable machine-readable identifier for an API error. Each value
-
-        corresponds 1:1 to an error type (and to one `responses` entry
-
-        in the OpenAPI spec). Branch on this rather than on the HTTP status
-
-        code — multiple errors may share a status as the API evolves.'
     TransactionPayload:
       title: TransactionPayload
       oneOf:
@@ -373,6 +290,32 @@ components:
         - $ref: '#/components/schemas/SvmPayload'
         required:
         - type
+    OrdersResponse:
+      title: OrdersResponse
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderSummary'
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+      required:
+      - orders
+      - total
+      - limit
+      - offset
+    OrderStatus:
+      title: OrderStatus
+      type: string
+      enum:
+      - CREATED
+      - COMPLETED
+      - CANCELLED
     Fill:
       title: Fill
       type: object
@@ -423,6 +366,35 @@ components:
       - Fluent
       - Moca
       - Rise
+    CancelOrderParams:
+      title: CancelOrderParams
+      type: object
+      description: Optional body for the cancel endpoint.
+      properties:
+        caller:
+          type:
+          - string
+          - 'null'
+    EvmPayload:
+      title: EvmPayload
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        chainId:
+          type: integer
+        to:
+          type: string
+        data:
+          type: string
+        value:
+          type: string
+      required:
+      - chain
+      - chainId
+      - to
+      - data
+      - value
     ErrorBody:
       title: ErrorBody
       type: object
@@ -446,15 +418,102 @@ components:
       required:
       - code
       - message
-    CancelOrderParams:
-      title: CancelOrderParams
+    OrderSummary:
+      title: OrderSummary
       type: object
-      description: Optional body for the cancel endpoint.
+      description: 'Compact order shape returned by the list endpoint. Sourced from the
+
+        indexer-fed DB, so on-chain-only fields (nonce, recipient, version) are
+
+        not included. Use getOrder for the full resource.'
       properties:
-        caller:
+        orderId:
+          type: string
+        createdAt:
+          type: integer
+        originChainId:
+          type: integer
+        sender:
+          type: string
+        tokenIn:
+          type: string
+        amountIn:
+          type: string
+        destChainId:
+          type: integer
+        tokenOut:
+          type: string
+        amountOut:
+          type: string
+        designatedSolver:
+          type: string
+        openTx:
+          type: string
+        amountOutFilled:
+          type: string
+        fillCount:
+          type: integer
+        amountInReleased:
+          type: string
+        fillReportCount:
+          type: integer
+        amountRefunded:
+          type: string
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        fillDeadline:
+          type: integer
+        funder:
+          type: string
+        resolvedAt:
           type:
-          - string
+          - integer
           - 'null'
+      required:
+      - orderId
+      - createdAt
+      - originChainId
+      - sender
+      - tokenIn
+      - amountIn
+      - destChainId
+      - tokenOut
+      - amountOut
+      - designatedSolver
+      - openTx
+      - amountOutFilled
+      - fillCount
+      - amountInReleased
+      - fillReportCount
+      - amountRefunded
+      - status
+      - fillDeadline
+      - funder
+    ErrorCode:
+      title: ErrorCode
+      type: string
+      enum:
+      - QuoteError
+      - BadQuoteRequest
+      - NoQuotesAvailable
+      - BadOrderRequest
+      - OrderNotFound
+      - OrderNotCancellable
+      - CancelOrderError
+      - BadTopologyRequest
+      - BadPermitRequest
+      - PermitNotSupported
+      - PermitExpired
+      - InvalidPermitSignature
+      - PermitQuoteError
+      - PermitBuildError
+      description: 'Stable machine-readable identifier for an API error. Each value
+
+        corresponds 1:1 to an error type (and to one `responses` entry
+
+        in the OpenAPI spec). Branch on this rather than on the HTTP status
+
+        code — multiple errors may share a status as the API evolves.'
     Order:
       title: Order
       type: object
@@ -546,77 +605,18 @@ components:
       - amountInReleased
       - amountRefunded
       - funder
-    OrderSummary:
-      title: OrderSummary
+    SvmPayload:
+      title: SvmPayload
       type: object
-      description: 'Compact order shape returned by the list endpoint. Sourced from the
-
-        indexer-fed DB, so on-chain-only fields (nonce, recipient, version) are
-
-        not included. Use getOrder for the full resource.'
       properties:
-        orderId:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        transaction:
           type: string
-        createdAt:
-          type: integer
-        originChainId:
-          type: integer
-        sender:
-          type: string
-        tokenIn:
-          type: string
-        amountIn:
-          type: string
-        destChainId:
-          type: integer
-        tokenOut:
-          type: string
-        amountOut:
-          type: string
-        designatedSolver:
-          type: string
-        openTx:
-          type: string
-        amountOutFilled:
-          type: string
-        fillCount:
-          type: integer
-        amountInReleased:
-          type: string
-        fillReportCount:
-          type: integer
-        amountRefunded:
-          type: string
-        status:
-          $ref: '#/components/schemas/OrderStatus'
-        fillDeadline:
-          type: integer
-        funder:
-          type: string
-        resolvedAt:
-          type:
-          - integer
-          - 'null'
+          format: byte
       required:
-      - orderId
-      - createdAt
-      - originChainId
-      - sender
-      - tokenIn
-      - amountIn
-      - destChainId
-      - tokenOut
-      - amountOut
-      - designatedSolver
-      - openTx
-      - amountOutFilled
-      - fillCount
-      - amountInReleased
-      - fillReportCount
-      - amountRefunded
-      - status
-      - fillDeadline
-      - funder
+      - chain
+      - transaction
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

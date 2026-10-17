@@ -94,59 +94,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    TopologyRouteProvider:
-      title: TopologyRouteProvider
-      type: object
-      properties:
-        provider:
-          $ref: '#/components/schemas/Providers'
-        lastUsed:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        quoteCount:
-          type: integer
-      required:
-      - provider
-      - quoteCount
-    AddressFrequency:
-      title: AddressFrequency
-      type: object
-      properties:
-        address:
-          type: string
-        count:
-          type: integer
-      required:
-      - address
-      - count
-    Providers:
-      title: Providers
-      type: string
-      enum:
-      - m-swap-facility
-      - m-wormhole-portal
-      - m-hyperlane-portal
-      - m-portal
-      - wormhole-cctp
-      - jupiter
-      - raydium
-      - mayan-swift
-      - kyber-swap
-      - limit-order
-      - uniswap-v3
-    AssetAddress:
-      title: AssetAddress
-      type: object
-      properties:
-        chain:
-          $ref: '#/components/schemas/Chain'
-        address:
-          type: string
-      required:
-      - chain
-      - address
     TopologyRouteStats:
       title: TopologyRouteStats
       type: object
@@ -208,6 +155,17 @@ components:
         in the OpenAPI spec). Branch on this rather than on the HTTP status
 
         code — multiple errors may share a status as the API evolves.'
+    AssetAddress:
+      title: AssetAddress
+      type: object
+      properties:
+        chain:
+          $ref: '#/components/schemas/Chain'
+        address:
+          type: string
+      required:
+      - chain
+      - address
     Chain:
       title: Chain
       type: string
@@ -230,6 +188,17 @@ components:
       - Fluent
       - Moca
       - Rise
+    AddressFrequency:
+      title: AddressFrequency
+      type: object
+      properties:
+        address:
+          type: string
+        count:
+          type: integer
+      required:
+      - address
+      - count
     ErrorBody:
       title: ErrorBody
       type: object
@@ -253,6 +222,37 @@ components:
       required:
       - code
       - message
+    Providers:
+      title: Providers
+      type: string
+      enum:
+      - m-swap-facility
+      - m-wormhole-portal
+      - m-hyperlane-portal
+      - m-portal
+      - wormhole-cctp
+      - jupiter
+      - raydium
+      - mayan-swift
+      - kyber-swap
+      - limit-order
+      - uniswap-v3
+    TopologyRouteProvider:
+      title: TopologyRouteProvider
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/Providers'
+        lastUsed:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        quoteCount:
+          type: integer
+      required:
+      - provider
+      - quoteCount
     TopologyRoute:
       title: TopologyRoute
       type: object
