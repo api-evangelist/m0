@@ -1,0 +1,47 @@
+edges:
+- partner_name: DefiLlama
+  partner: defillama
+  partner_match: aggregator
+  type: coverage
+  channel: partner-built
+  relationship: connector-coverage
+  direction: partner-built
+  evidence: https://stablecoins.llama.fi/stablecoin/213
+  category: stablecoin data coverage
+  contract_reference:
+    register: DefiLlama stablecoins (stablecoins.llama.fi)
+    standard: null
+    spec_file: null
+    role: stablecoin-issuer
+    registered_name: M by M0
+    register_id: https://stablecoins.llama.fi/stablecoin/213
+    matched_domain: m0.org
+    matched_by: domain
+    stablecoins:
+    - symbol: M
+      name: M by M0
+      peg: peggedUSD
+      mechanism: fiat-backed
+      defillama: https://stablecoins.llama.fi/stablecoin/213
+    peg_mechanisms:
+    - fiat-backed
+    signal_note: 'coverage: DefiLlama tracks the issuer''s stablecoin(s); coins, pegs and circulation are context,
+      never counted'
+    detected_by: sweep-stablecoins-tokenization.py
+    detected: '2026-10-20'
+  detected_by: sweep-stablecoins-tokenization.py
+  first_seen: '2026-10-20'
+generated: '2026-10-20'
+method: searched
+source:
+- https://www.esma.europa.eu/sites/default/files/2024-12/EMTWP.csv
+- https://www.esma.europa.eu/sites/default/files/2024-12/ARTZZ.csv
+- https://www.esma.europa.eu/sites/default/files/2024-12/OTHER.csv
+- https://www.hkma.gov.hk/eng/regulatory-resources/registers/register-of-licensed-stablecoin-issuers/
+- https://stablecoins.llama.fi/stablecoins
+checked:
+- https://stablecoins.llama.fi/stablecoins
+- https://www.esma.europa.eu/sites/default/files/2024-12/ARTZZ.csv
+- https://www.esma.europa.eu/sites/default/files/2024-12/EMTWP.csv
+- https://www.esma.europa.eu/sites/default/files/2024-12/OTHER.csv
+- https://www.hkma.gov.hk/eng/regulatory-resources/registers/register-of-licensed-stablecoin-issuers/
